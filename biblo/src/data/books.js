@@ -59,12 +59,14 @@ const books = [
   {
     id: 'the-book-of-bill',
     shelf: 'a',
-    title: 'The Book of Bill',
+    title: 'Libro de Bill',
     signature: 'X-666 · CIP',
     author: null,
     year: null,
     provenance: 'procedencia incierta',
     atmosphere: 'maldito',
+    special: 'billDeal',
+    cover: '/covers/libro-de-bill.jpg',
     description:
       'Se vende como autoayuda. La faja dice bestseller, el sello de cera dice otra cosa. Cada lector jura haberlo comprado por accidente, y cada uno lo recomienda a alguien más antes de terminar el primer capítulo.',
     ambientLabel: 'EL SELLO SE ABRE SOLO, UNA Y OTRA VEZ, SIN IMPORTAR CUÁNTAS VECES LO CIERRES',

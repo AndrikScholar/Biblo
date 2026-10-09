@@ -1,0 +1,188 @@
+/* Escena "trato" — misma hoja de estilos que ya tenías, adaptada para
+   vivir dentro de un overlay (.bill-deal) en vez de ser el body entero. */
+
+.bill-deal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Courier New', Courier, monospace;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#btn-volver {
+  position: absolute;
+  bottom: 10px;
+  right: 150px;
+  color: #f7c94d;
+  text-decoration: none;
+  border: 1px solid #42e3ff;
+  padding: 15px 35px;
+  font-size: 0.85rem;
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 4px;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  background-color: #000;
+  cursor: pointer;
+}
+
+#btn-volver:hover {
+  background-color: #42e3ff;
+  color: #000;
+  box-shadow: 0 0 15px #42e3ff;
+}
+
+#escena-principal {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease;
+  background-color: #000;
+}
+
+.video-container {
+  position: relative;
+  width: 100vw;
+  max-width: 177.78vh;
+  height: 56.25vw;
+  max-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.botones {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 95px;
+  z-index: 10;
+}
+
+.btn-trato {
+  background-color: #000000;
+  color: #42e3ff;
+  border: 2px solid #42e3ff;
+  padding: 20px 115px;
+  font-size: 1.2rem;
+  font-family: 'Times New Roman', Times, serif;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+#btn-si {
+  box-shadow: 0 0 10px rgba(66, 227, 255, 0.2) inset, 0 0 15px rgba(66, 227, 255, 0.4);
+}
+#btn-si:hover {
+  background-color: #42e3ff;
+  color: #000;
+  box-shadow: 0 0 25px #42e3ff, 0 0 50px #0055ff;
+  transform: scale(1.05);
+}
+
+#btn-no {
+  box-shadow: 0 0 10px rgba(66, 227, 255, 0.2) inset, 0 0 15px rgba(66, 227, 255, 0.4);
+}
+#btn-no:hover {
+  background-color: #ff0000;
+  border-color: #ff0000;
+  color: #000;
+  box-shadow: 0 0 25px #ff0000, 0 0 50px #aa0000;
+  transform: scale(1.05);
+}
+
+.pantalla-respuesta {
+  position: fixed;
+  inset: 0;
+  background-color: #000000;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.texto-final {
+  font-size: 4rem;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-align: center;
+  transition: opacity 2s ease;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.rojo {
+  color: #ff0000;
+  text-shadow: 0 0 25px #ff0000;
+}
+.cyan {
+  color: #42e3ff;
+  text-shadow: 0 0 25px #42e3ff;
+}
+
+@keyframes efectoGlitch {
+  0% {
+    transform: translate(0);
+    filter: hue-rotate(0deg) invert(0);
+  }
+  20% {
+    transform: translate(-10px, 10px);
+    filter: hue-rotate(90deg) invert(0.2);
+  }
+  40% {
+    transform: translate(-10px, -10px);
+    filter: hue-rotate(180deg) invert(0.8);
+  }
+  60% {
+    transform: translate(10px, 10px);
+    filter: hue-rotate(270deg) invert(1);
+  }
+  80% {
+    transform: translate(10px, -10px);
+    filter: hue-rotate(360deg) invert(0.2);
+  }
+  100% {
+    transform: translate(0);
+    filter: hue-rotate(0deg) invert(0);
+  }
+}
+
+.bill-deal.activar-glitch {
+  animation: efectoGlitch 0.15s infinite;
+}
+
+@media (max-width: 760px) {
+  .botones {
+    gap: 24px;
+  }
+  .btn-trato {
+    padding: 16px 40px;
+    font-size: 1rem;
+  }
+  #btn-volver {
+    right: 16px;
+    bottom: 16px;
+    padding: 10px 20px;
+  }
+  .texto-final {
+    font-size: 2.2rem;
+  }
+}
