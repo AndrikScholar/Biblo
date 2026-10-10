@@ -8,9 +8,19 @@
   --line: rgba(91, 70, 48, 0.22);
   --paper: #f8f2e6;
 
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'EB Garamond', Georgia, serif;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  /* sombras de la madera: la misma tinta, más honda */
+  --wood: #5b4630;
+  --wood-deep: #3e2f20;
+  --brass-hi: #f4d78c;
+  --brass-lo: #b8863a;
+  --brass-ink: #3a2a12;
+  --night-text: #fbf4e6;
+
+  --font-display: 'IM Fell English', Georgia, serif;
+  --font-body: 'Alegreya', Georgia, serif;
+  --font-data: 'Courier Prime', 'Courier New', monospace;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
   color-scheme: light;
 }
@@ -25,11 +35,22 @@ body {
   padding: 0;
 }
 
+html {
+  scrollbar-color: var(--ink-1) var(--cream-1);
+}
+
 body {
   background: var(--cream-1);
   color: var(--ink-0);
   font-family: var(--font-body);
+  font-size: 1.0625rem;
   -webkit-font-smoothing: antialiased;
+  caret-color: var(--ink-0);
+}
+
+::selection {
+  background: var(--ink-0);
+  color: var(--cream-0);
 }
 
 #root {
@@ -40,8 +61,9 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 400;
   margin: 0;
+  text-wrap: balance;
 }
 
 p {
@@ -57,6 +79,11 @@ img,
 svg {
   display: block;
   max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
 }
 
 :focus-visible {

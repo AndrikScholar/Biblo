@@ -56,17 +56,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
+/* El video se amplía un 17% anclado arriba: la franja inferior del video
+   (donde están la marca de agua y los botones SÍ/NO que vienen dibujados
+   en el propio video) queda fuera del marco. Todo va en porcentajes del
+   video, así que el recorte es el mismo con cualquier tamaño de ventana. */
 .video-container video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(1.17);
+  transform-origin: 50% 0%;
 }
 
 .botones {
   position: absolute;
-  bottom: 6%;
+  bottom: 3%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;

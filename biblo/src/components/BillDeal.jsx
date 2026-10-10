@@ -11,15 +11,13 @@ import books from '../data/books'
 //   - trato.mp4   (ya lo copiamos nosotros)
 //   - terror.mp3  (falta: agrégalo tú en /public/terror.mp3)
 //
-// Después de SÍ o NO, además del texto de resultado, ahora se abre la
-// sinopsis del libro (el mismo modal que usan los demás). Mientras no
-// tengas la sinopsis real de Bill, se usa como placeholder el texto y
-// la atmósfera de otro libro del catálogo — cámbialo abajo en
-// PLACEHOLDER_ID por el que prefieras mientras tanto.
-const PLACEHOLDER_ID = 'orbita-muerta'
+// Después de SÍ o NO, además del texto de resultado, se abre la ficha
+// del propio Libro de Bill (la misma escena que usan los demás libros,
+// con su atmósfera "maldito").
+const PLACEHOLDER_ID = 'the-book-of-bill'
 const placeholderBook = books.find((b) => b.id === PLACEHOLDER_ID)
 
-export default function BillDeal({ onExit }) {
+export default function BillDeal({ onExit, synopsisProps }) {
   const [result, setResult] = useState(null) // null | 'si' | 'no'
   const [fading, setFading] = useState(false)
   const [showResult, setShowResult] = useState(false)
@@ -57,7 +55,7 @@ export default function BillDeal({ onExit }) {
   }
 
   if (showSynopsis && placeholderBook) {
-    return <BookModal book={placeholderBook} onClose={onExit} />
+    return <BookModal book={placeholderBook} onClose={onExit} {...synopsisProps} />
   }
 
   return (

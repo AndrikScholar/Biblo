@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Herramientas de diseño y del editor
+.impeccable/mocks/
+.claude/
+.impeccable/questions/

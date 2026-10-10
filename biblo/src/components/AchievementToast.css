@@ -1,4 +1,4 @@
-.achievement-toast {
+﻿.achievement-toast {
   position: fixed;
   right: 22px;
   bottom: 22px;
@@ -43,7 +43,7 @@
 }
 
 .achievement-toast__label {
-  font-family: var(--font-sans);
+  font-family: var(--font-data);
   font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
