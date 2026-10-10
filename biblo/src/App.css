@@ -597,6 +597,69 @@ main {
   height: 100%;
 }
 
+/* entre la atmósfera y el contenido: enmarca sin tapar el texto */
+.scene__tentacles {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Rueda de Bill: enorme y centrada; solo el anillo asoma por las esquinas */
+.cipher-wheel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 112vmax;
+  height: 112vmax;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: wheel-in 1.6s var(--ease-out) both;
+}
+
+.cipher-wheel svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: #e3564a;
+  stroke-width: 0.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.32;
+  filter: drop-shadow(0 0 0.6px rgba(227, 86, 74, 0.9));
+}
+
+.cipher-wheel__spin {
+  animation: wheel-spin 140s linear infinite;
+  transform-origin: 0 0;
+}
+
+.cipher-wheel__thin {
+  stroke-width: 0.2;
+  stroke-dasharray: 1 1.6;
+}
+
+.cipher-wheel__core {
+  opacity: 0.15;
+}
+
+@keyframes wheel-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wheel-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.08) rotate(-12deg);
+  }
+}
+
 .scene__controls {
   position: fixed;
   top: 20px;

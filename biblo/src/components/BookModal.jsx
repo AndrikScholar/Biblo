@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Atmosphere from './Atmosphere'
 import BookCover from './BookCover'
+import Tentacles from './Tentacles'
+import CipherWheel from './CipherWheel'
 import { ATMOSPHERES, formatPrice } from '../data/books'
 import { CloseIcon, EyeIcon, PlusIcon, CheckIcon } from './Icons'
 
@@ -59,6 +61,8 @@ export default function BookModal({ book, origin, onClose, inCart = false, onAdd
       style={{ '--ox': `${ox}px`, '--oy': `${oy}px`, '--glow': atmosphere.glow }}
     >
       <Atmosphere kind={book.atmosphere} className="scene__atmosphere" />
+      {book.edges === 'tentacles' && <Tentacles />}
+      {book.edges === 'cipherWheel' && <CipherWheel />}
 
       <div className="scene__controls">
         <button

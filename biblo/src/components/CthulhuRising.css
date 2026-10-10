@@ -13,6 +13,14 @@
   height: 100%;
 }
 
+/* velo negro para la entrada y la salida (su opacidad la mueve el JS) */
+.rising__veil {
+  position: absolute;
+  inset: 0;
+  background: #030d0d;
+  pointer-events: none;
+}
+
 .rising__words {
   position: absolute;
   top: 9vh;

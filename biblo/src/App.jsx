@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import { CheckIcon } from './components/Icons'
 import Topbar from './components/Topbar'
 import Hero from './components/Hero'
 import Bookcase from './components/Bookcase'
 import BookModal from './components/BookModal'
 import BillDeal from './components/BillDeal'
-import CthulhuRising from './components/CthulhuRising'
+// la escena 3D (Three.js) se descarga aparte, solo cuando hace falta
+const loadRising = () => import('./components/CthulhuRising')
+const CthulhuRising = lazy(loadRising)
 import CartDrawer from './components/CartDrawer'
 import AchievementToast from './components/AchievementToast'
 import books from './data/books'
@@ -89,7 +91,8 @@ export default function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       for (const b of books) if (b.cover) new Image().src = b.cover
-      new Image().src = '/scenes/cthulhu.webp'
+      loadRising()
+      fetch('/scenes/cthulhu.glb').catch(() => {})
       const video = document.createElement('video')
       video.preload = 'auto'
       video.muted = true
@@ -133,10 +136,12 @@ export default function App() {
         />
       )}
       {openBook?.special === 'cthulhuRising' && (
-        <CthulhuRising
-          onExit={closeBook}
-          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
-        />
+        <Suspense fallback={<div className="rising" />}>
+          <CthulhuRising
+            onExit={closeBook}
+            synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+          />
+        </Suspense>
       )}
       {openBook && !openBook.special && (
         <BookModal
