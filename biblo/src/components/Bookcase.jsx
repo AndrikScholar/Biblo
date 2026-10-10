@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import ShelfSparks from './ShelfSparks'
 import books, { ATMOSPHERES, SHELVES, booksByShelf, formatPrice } from '../data/books'
-import { playHover } from '../hoverSound'
+import { playHover } from '../sound'
 import { OpenBookIcon, PlusIcon, CheckIcon } from './Icons'
 
 function Spine({ book, active, visited, onActivate, onOpen, spineRef }) {

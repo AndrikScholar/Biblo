@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import BookModal from './BookModal'
 import books from '../data/books'
+import { isMuted } from '../sound'
 import './CthulhuRising.css'
 
 // Escena de "La Llamada de Cthulhu": Cthulhu emerge del océano entre lluvia
@@ -25,7 +26,7 @@ const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) 
 
 function makeAudio() {
   const Ctx = window.AudioContext || window.webkitAudioContext
-  if (!Ctx) return null
+  if (!Ctx || isMuted()) return null
   const ctx = new Ctx()
   // ruido marrón: base tanto del trueno como de la lluvia
   const len = ctx.sampleRate * 4

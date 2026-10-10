@@ -8,6 +8,8 @@ export {
   Check as CheckIcon,
   Eye as EyeIcon,
   BookOpen as OpenBookIcon,
+  SpeakerHigh as SoundOnIcon,
+  SpeakerSlash as SoundOffIcon,
 } from '@phosphor-icons/react'
 
 export function OwlIcon(props) {

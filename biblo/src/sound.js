@@ -1,6 +1,30 @@
-// "Toc" suave al pasar de un lomo a otro: un pellizco de seno con caída
-// rápida más un clic de papel. Cada libro suena en una nota de una escala
-// pentatónica, así que recorrer la estantería suena a melodía.
+// Sonido de Biblo: interruptor de silencio (recordado entre visitas) y el
+// "toc" al pasar de un lomo a otro.
+const MUTE_KEY = 'biblo:muted'
+
+let muted = false
+try {
+  muted = localStorage.getItem(MUTE_KEY) === 'true'
+} catch {
+  // sin localStorage el silencio no se recuerda, pero funciona en la visita
+}
+
+export function isMuted() {
+  return muted
+}
+
+export function setMuted(value) {
+  muted = value
+  try {
+    localStorage.setItem(MUTE_KEY, String(value))
+  } catch {
+    // ver arriba
+  }
+}
+
+// El "toc": un pellizco de seno con caída rápida más un clic de papel. Cada
+// libro suena en una nota de una escala pentatónica, así que recorrer la
+// estantería suena a melodía.
 const NOTES = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51]
 
 let ctx = null
@@ -20,7 +44,7 @@ window.addEventListener('pointerdown', () => getCtx()?.resume(), { once: true })
 window.addEventListener('keydown', () => getCtx()?.resume(), { once: true })
 
 export function playHover(index) {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  if (muted || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   const ac = getCtx()
   if (!ac || ac.state !== 'running') return
   const t = ac.currentTime

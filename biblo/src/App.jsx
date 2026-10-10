@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { CheckIcon } from './components/Icons'
 import Topbar from './components/Topbar'
 import Hero from './components/Hero'
 import Bookcase from './components/Bookcase'
@@ -13,6 +14,8 @@ import './App.css'
 const VISITED_KEY = 'biblo:visited-books'
 const ACHIEVEMENT_KEY = 'biblo:achievement:trotamundos'
 const CART_KEY = 'biblo:cart'
+// referencia viva al video precargado, para que el navegador no lo descarte
+const preloaded = {}
 
 function loadJSON(key, fallback) {
   try {
@@ -52,6 +55,7 @@ export default function App() {
   function addToCart(id) {
     const exists = cart.some((i) => i.id === id)
     updateCart(exists ? cart.map((i) => (i.id === id ? { ...i, qty: i.qty + 1 } : i)) : [...cart, { id, qty: 1 }])
+    setAdded((prev) => ({ id, n: (prev?.n || 0) + 1 }))
   }
 
   function handleOpen(book, rect) {
@@ -71,6 +75,29 @@ export default function App() {
       saveJSON(ACHIEVEMENT_KEY, true)
     }
   }
+
+  // aviso breve al añadir al carrito
+  const [added, setAdded] = useState(null) // { id, n }
+  useEffect(() => {
+    if (!added) return
+    const timer = setTimeout(() => setAdded(null), 2600)
+    return () => clearTimeout(timer)
+  }, [added])
+
+  // precarga en segundo plano lo pesado de las escenas especiales, para que
+  // la primera vez que se abren no haya espera
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      for (const b of books) if (b.cover) new Image().src = b.cover
+      new Image().src = '/scenes/cthulhu.webp'
+      const video = document.createElement('video')
+      video.preload = 'auto'
+      video.muted = true
+      video.src = '/trato.mp4'
+      preloaded.video = video
+    }, 1200)
+    return () => clearTimeout(timer)
+  }, [])
 
   const closeBook = useCallback(() => setOpenBook(null), [])
   const closeCart = useCallback(() => setCartOpen(false), [])
@@ -119,6 +146,24 @@ export default function App() {
           inCart={inCart(openBook.id)}
           onAdd={addToCart}
         />
+      )}
+
+      {added && (
+        <div className="added-toast" role="status" key={added.n}>
+          <CheckIcon width="18" height="18" />
+          <span>
+            Añadido: <strong>{books.find((b) => b.id === added.id)?.title}</strong>
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setAdded(null)
+              setCartOpen(true)
+            }}
+          >
+            Ver carrito
+          </button>
+        </div>
       )}
 
       {cartOpen && <CartDrawer items={cart} onChange={updateCart} onClose={closeCart} />}

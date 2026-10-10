@@ -74,6 +74,23 @@
   transform: scale(1.15);
 }
 
+.sound-button {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-right: -16px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-0);
+  transition: background 0.2s ease;
+}
+
+.sound-button:hover {
+  background: var(--cream-2);
+}
+
 .cart-button {
   display: inline-flex;
   align-items: center;
@@ -763,6 +780,60 @@ main {
   font-family: var(--font-data);
   font-size: 0.875rem;
   color: rgba(251, 244, 230, 0.85);
+}
+
+/* ---------- Aviso de "añadido al carrito" ---------- */
+
+.added-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 260;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100% - 32px);
+  padding: 10px 10px 10px 16px;
+  border-radius: 4px;
+  background: var(--ink-0);
+  color: var(--cream-0);
+  box-shadow: 0 16px 34px -14px rgba(40, 28, 16, 0.6);
+  font-size: 1rem;
+  transform: translateX(-50%);
+  animation: toast-in 0.45s var(--ease-out);
+}
+
+.added-toast strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+.added-toast button {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border: 1px solid rgba(246, 240, 227, 0.45);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--cream-0);
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.added-toast button:hover {
+  background: var(--cream-0);
+  color: var(--ink-0);
+}
+
+.added-toast :focus-visible {
+  outline-color: var(--cream-0);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(16px);
+  }
 }
 
 /* ---------- Carrito ---------- */
