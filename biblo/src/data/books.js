@@ -41,6 +41,13 @@ export const ATMOSPHERES = {
     particle: '#cfd6ff',
     glow: '#ffffff',
   },
+  // El Principito: noche azul y estrellas doradas, como su portada
+  asteroide: {
+    label: 'Estrellas',
+    bg: 'radial-gradient(120% 100% at 50% 0%, #2c3f73 0%, #16204a 55%, #090d22 100%)',
+    particle: '#f5d533',
+    glow: '#fff3b0',
+  },
   esporas: {
     label: 'Esporas',
     bg: 'radial-gradient(120% 100% at 50% 100%, #17321c 0%, #0b190e 55%, #050c06 100%)',
@@ -144,20 +151,23 @@ const books = [
       'Coronación 1: Aldric, fuego blanco. Coronación 40: Aldric, fuego blanco otra vez. El dragón no ha olvidado a ninguno; el reino sí.',
   },
   {
+    // id heredado del libro anterior: así no se pierde el progreso guardado
     id: 'orbita-muerta',
     shelf: 'b',
-    title: 'Órbita muerta',
-    signature: 'N-909 · ROM',
-    author: 'Anders Røm',
-    year: '2016',
-    atmosphere: 'cosmos',
+    title: 'El Principito',
+    signature: 'B-612 · SAI',
+    author: 'Antoine de Saint-Exupéry',
+    year: '1943',
+    atmosphere: 'asteroide',
+    special: 'desertToAsteroid',
+    edges: 'asteroid',
+    cover: '/covers/el-principito.webp',
     price: 19.9,
     spine: { height: 0.88, width: 80 },
     description:
-      'La estación Vøring lleva doce años emitiendo el mismo informe de mantenimiento cada 94 minutos. Røm transcribe los 61.000 informes completos. Los capítulos impares son la transcripción; los pares, lo que se fue rompiendo mientras tanto.',
-    ambientLabel: 'EL CAMPO DE ESTRELLAS SE ABRE DESDE EL CENTRO DEL VOLUMEN',
-    quote:
-      'Informe 40.112: todo correcto. Informe 40.113: todo correcto. Informe 40.114: todo correcto, pero ya no somos cuatro.',
+      'Un aviador cae con su avioneta en mitad del desierto del Sahara y, mientras intenta repararla, conoce a un niño de cabellos dorados que dice venir de un asteroide diminuto. El principito le cuenta su viaje por planetas habitados por adultos muy extraños, lo que aprendió de un zorro y por qué no puede olvidar la rosa que dejó en casa. Una fábula sobre la amistad, la pérdida y la mirada de la infancia.',
+    ambientLabel: 'CUANDO MIRES EL CIELO DE NOCHE, TODAS LAS ESTRELLAS PARECERÁN REÍR',
+    quote: 'Solo se ve bien con el corazón. Lo esencial es invisible a los ojos.',
   },
   {
     id: 'jardin-hongos-lentos',

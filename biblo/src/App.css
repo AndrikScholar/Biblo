@@ -660,6 +660,63 @@ main {
   }
 }
 
+/* Asteroide B-612 asomando por la esquina inferior derecha */
+.asteroid {
+  position: fixed;
+  right: -15vmin;
+  bottom: -27vmin;
+  z-index: 1;
+  width: 62vmin;
+  height: 62vmin;
+  pointer-events: none;
+  animation: asteroid-in 1.4s var(--ease-out) both;
+}
+
+.asteroid svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 24px rgba(255, 243, 176, 0.18));
+}
+
+.asteroid__spin {
+  animation: wheel-spin 110s linear infinite;
+}
+
+.asteroid__smoke {
+  animation: asteroid-smoke 4s ease-in-out infinite;
+}
+
+@keyframes asteroid-smoke {
+  50% {
+    opacity: 0.35;
+    transform: translateY(-2px);
+  }
+}
+
+/* viniendo de la escena del desierto, el asteroide ya está en su sitio */
+.scene.is-direct .asteroid {
+  animation: none;
+}
+
+@keyframes asteroid-in {
+  from {
+    opacity: 0;
+    transform: translate(8vmin, 8vmin);
+  }
+}
+
+@media (max-width: 700px) {
+  /* en móvil más pequeño y discreto: el texto ocupa todo el ancho */
+  .asteroid {
+    width: 44vmin;
+    height: 44vmin;
+    right: -12vmin;
+    bottom: -20vmin;
+    opacity: 0.55;
+  }
+}
+
 .scene__controls {
   position: fixed;
   top: 20px;

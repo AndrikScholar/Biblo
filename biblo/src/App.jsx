@@ -9,6 +9,7 @@ import BillDeal from './components/BillDeal'
 const loadRising = () => import('./components/CthulhuRising')
 const CthulhuRising = lazy(loadRising)
 import CartDrawer from './components/CartDrawer'
+import DesertToAsteroid from './components/DesertToAsteroid'
 import AchievementToast from './components/AchievementToast'
 import books from './data/books'
 import './App.css'
@@ -142,6 +143,12 @@ export default function App() {
             synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
           />
         </Suspense>
+      )}
+      {openBook?.special === 'desertToAsteroid' && (
+        <DesertToAsteroid
+          onExit={closeBook}
+          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+        />
       )}
       {openBook && !openBook.special && (
         <BookModal

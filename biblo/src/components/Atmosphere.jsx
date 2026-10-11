@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { ATMOSPHERES } from '../data/books'
+import { makeStarSprite } from './starSprite'
 
 // Motor de atmósferas.
 // Cada libro tiene un preset. Las partículas viven en tres profundidades
@@ -15,6 +16,7 @@ const CONFIGS = {
   presion: { count: 60, size: [1.5, 4.5], speed: [0.25, 0.7], motion: 'bubble', glow: true, rays: true },
   fuego: { count: 120, size: [1, 3.2], speed: [0.9, 2.3], motion: 'up', glow: true, flicker: true, heat: true },
   cosmos: { count: 230, size: [0.4, 1.8], speed: [0.02, 0.06], motion: 'drift', twinkle: true, constellation: true, shooting: true },
+  asteroide: { count: 150, size: [0.6, 2.6], speed: [0.02, 0.05], motion: 'drift', twinkle: true, constellation: true, shooting: true, star: true },
   esporas: { count: 70, size: [2, 6], speed: [0.08, 0.25], motion: 'float', glow: true },
   lluvia: { count: 190, size: [0.8, 1.4], speed: [11, 16], motion: 'down', streak: true, splash: true, glowSpot: true },
 }
@@ -100,6 +102,7 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
     const sprite = makeGlowSprite(atmosphere.glow)
+    const starSprite = cfg.star ? makeStarSprite(atmosphere.particle, atmosphere.glow) : null
 
     let width = 0
     let height = 0
@@ -323,6 +326,14 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
           if (cfg.motion === 'diagonal') ctx.lineTo(dxp + len * 0.45, dyp - len)
           else ctx.lineTo(dxp, dyp - len)
           ctx.stroke()
+        } else if (starSprite && p.size > 1.5) {
+          // las estrellas grandes con cinco puntas, girando muy despacio
+          const s = p.size * (width < 700 ? 9 : 15) // en móvil, más pequeñas tras el texto
+          ctx.save()
+          ctx.translate(dxp, dyp)
+          ctx.rotate(p.phase + t / 9000)
+          ctx.drawImage(starSprite, -s / 2, -s / 2, s, s)
+          ctx.restore()
         } else if (cfg.glow) {
           const s = p.size * 7
           ctx.drawImage(sprite, dxp - s / 2, dyp - s / 2, s, s)
