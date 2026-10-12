@@ -4,6 +4,7 @@ import BookCover from './BookCover'
 import Tentacles from './Tentacles'
 import CipherWheel from './CipherWheel'
 import Asteroid from './Asteroid'
+import PaperBoat from './PaperBoat'
 import { ATMOSPHERES, formatPrice } from '../data/books'
 import { CloseIcon, EyeIcon, PlusIcon, CheckIcon } from './Icons'
 
@@ -65,6 +66,7 @@ export default function BookModal({ book, origin, onClose, inCart = false, onAdd
       {book.edges === 'tentacles' && <Tentacles />}
       {book.edges === 'cipherWheel' && <CipherWheel />}
       {book.edges === 'asteroid' && <Asteroid />}
+      {book.edges === 'paperBoat' && <PaperBoat />}
 
       <div className="scene__controls">
         <button

@@ -14,7 +14,7 @@ const CONFIGS = {
   tormenta: { count: 170, size: [0.8, 1.7], speed: [9, 14], motion: 'diagonal', streak: true, flash: true },
   arena: { count: 240, size: [0.6, 2], speed: [0.9, 2.6], motion: 'wind' },
   presion: { count: 60, size: [1.5, 4.5], speed: [0.25, 0.7], motion: 'bubble', glow: true, rays: true },
-  fuego: { count: 120, size: [1, 3.2], speed: [0.9, 2.3], motion: 'up', glow: true, flicker: true, heat: true },
+  globos: { count: 60, size: [0.8, 4.2], speed: [0.35, 0.9], motion: 'up', glow: true, balloon: true, vignette: true },
   cosmos: { count: 230, size: [0.4, 1.8], speed: [0.02, 0.06], motion: 'drift', twinkle: true, constellation: true, shooting: true },
   asteroide: { count: 150, size: [0.6, 2.6], speed: [0.02, 0.05], motion: 'drift', twinkle: true, constellation: true, shooting: true, star: true },
   esporas: { count: 70, size: [2, 6], speed: [0.08, 0.25], motion: 'float', glow: true },
@@ -47,6 +47,37 @@ function makeGlowSprite(color) {
   grad.addColorStop(1, color + '00')
   g.fillStyle = grad
   g.fillRect(0, 0, size, size)
+  return c
+}
+
+// Globo de IT: cuerpo con brillo, nudo y un hilo que cuelga. Pre-renderizado
+// como el halo, para dibujarlo barato cada fotograma.
+function makeBalloonSprite(color) {
+  const c = document.createElement('canvas')
+  c.width = 64
+  c.height = 128
+  const g = c.getContext('2d')
+  g.fillStyle = color
+  g.beginPath()
+  g.ellipse(32, 34, 24, 30, 0, 0, Math.PI * 2)
+  g.fill()
+  g.beginPath()
+  g.moveTo(32, 62)
+  g.lineTo(27, 70)
+  g.lineTo(37, 70)
+  g.closePath()
+  g.fill()
+  const shine = g.createRadialGradient(23, 22, 0, 23, 22, 14)
+  shine.addColorStop(0, 'rgba(255,255,255,.55)')
+  shine.addColorStop(1, 'rgba(255,255,255,0)')
+  g.fillStyle = shine
+  g.fillRect(0, 0, 64, 64)
+  g.strokeStyle = 'rgba(230,222,210,.7)'
+  g.lineWidth = 1.2
+  g.beginPath()
+  g.moveTo(32, 70)
+  g.bezierCurveTo(24, 88, 40, 104, 30, 126)
+  g.stroke()
   return c
 }
 
@@ -103,6 +134,7 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
     const sprite = makeGlowSprite(atmosphere.glow)
     const starSprite = cfg.star ? makeStarSprite(atmosphere.particle, atmosphere.glow) : null
+    const balloonSprite = cfg.balloon ? makeBalloonSprite(atmosphere.particle) : null
 
     let width = 0
     let height = 0
@@ -168,15 +200,6 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
         g.addColorStop(1, atmosphere.glow + '00')
         ctx.fillStyle = g
         ctx.fillRect(0, 0, width, height)
-      }
-
-      if (cfg.heat) {
-        const flick = 0.75 + Math.sin(t / 180) * 0.08 + Math.sin(t / 67) * 0.05
-        const g = ctx.createLinearGradient(0, height, 0, height * 0.45)
-        g.addColorStop(0, atmosphere.glow + Math.round(flick * 60).toString(16).padStart(2, '0'))
-        g.addColorStop(1, atmosphere.glow + '00')
-        ctx.fillStyle = g
-        ctx.fillRect(0, height * 0.45, width, height * 0.55)
       }
 
       if (cfg.rays) {
@@ -306,7 +329,6 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
 
         let alpha = p.alpha
         if (cfg.twinkle) alpha *= 0.35 + Math.abs(Math.sin(p.phase + t / 900)) * 0.65
-        if (cfg.flicker) alpha *= 0.55 + Math.abs(Math.sin(p.phase + t / 160)) * 0.45
         if (cfg.pulse) alpha *= 0.35 + Math.abs(Math.sin(p.phase + t / 1700)) * 0.65
         if (cfg.motion === 'up') alpha *= Math.min(1, Math.max(0, p.y / height) * 1.6)
 
@@ -333,6 +355,14 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
           ctx.translate(dxp, dyp)
           ctx.rotate(p.phase + t / 9000)
           ctx.drawImage(starSprite, -s / 2, -s / 2, s, s)
+          ctx.restore()
+        } else if (balloonSprite && p.size > 2.6) {
+          // los globos grandes, meciéndose al subir
+          const s = p.size * (width < 700 ? 6 : 9)
+          ctx.save()
+          ctx.translate(dxp, dyp)
+          ctx.rotate(Math.sin(p.phase + t / 1100) * 0.12)
+          ctx.drawImage(balloonSprite, -s / 2, -s / 2, s, s * 2)
           ctx.restore()
         } else if (cfg.glow) {
           const s = p.size * 7

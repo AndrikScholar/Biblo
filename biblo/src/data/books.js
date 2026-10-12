@@ -29,11 +29,12 @@ export const ATMOSPHERES = {
     particle: '#4fd8c4',
     glow: '#8ff2e2',
   },
-  fuego: {
-    label: 'Fuego',
-    bg: 'radial-gradient(120% 100% at 50% 100%, #4a1f08 0%, #200d04 55%, #0d0502 100%)',
-    particle: '#f2984a',
-    glow: '#ffd27a',
+  // IT: oscuridad de alcantarilla y globos rojos que suben
+  globos: {
+    label: 'Globos',
+    bg: 'radial-gradient(120% 100% at 50% 100%, #3d0d12 0%, #180508 55%, #070203 100%)',
+    particle: '#d8282f',
+    glow: '#ff5a5f',
   },
   cosmos: {
     label: 'Cosmos',
@@ -135,20 +136,25 @@ const books = [
       'Ph’nglui mglw’nafh Cthulhu R’lyeh wgah’nagl fhtagn. En su morada de R’lyeh, el difunto Cthulhu espera soñando.',
   },
   {
+    // id heredado de "Ceniza y corona": así no se pierde el progreso guardado
     id: 'ceniza-y-corona',
     shelf: 'a',
-    title: 'Ceniza y corona',
-    signature: 'N-102 · BAI',
-    author: 'Rhys Baird',
-    year: '1889',
-    atmosphere: 'fuego',
-    price: 17.5,
-    spine: { height: 0.74, width: 90 },
+    title: 'IT',
+    signature: 'D-027 · KIN',
+    author: 'Stephen King',
+    year: '1986',
+    atmosphere: 'globos',
+    special: 'redBalloon',
+    edges: 'paperBoat',
+    cover: '/covers/it.webp',
+    price: 24.5,
+    spine: { height: 0.86, width: 98 },
+    // letra del lomo en blanco, como en la portada: el rojo se perdía sobre ella
+    spineInk: '#fbf4e6',
     description:
-      'Cada monarca de este reino fue coronado con fuego real. El dragón que presta las llamas recuerda el nombre de todos, incluso los que el reino mismo ha olvidado.',
-    ambientLabel: 'EL CALOR SUBE DESDE LA ENCUADERNACIÓN COMO SI ALGO AÚN ARDIERA DENTRO',
-    quote:
-      'Coronación 1: Aldric, fuego blanco. Coronación 40: Aldric, fuego blanco otra vez. El dragón no ha olvidado a ninguno; el reino sí.',
+      'En 1958, en el pueblo de Derry, Maine, siete niños marginados que se hacen llamar el Club de los Perdedores descubren que algo vive bajo las calles. Despierta cada veintisiete años, se alimenta de los niños y adopta la forma de lo que más temen, casi siempre la de un payaso llamado Pennywise. Ya adultos y lejos de Derry, una llamada les recuerda una promesa que hicieron de niños y que creían haber olvidado.',
+    ambientLabel: 'UN GLOBO ROJO SUBE DESDE LA ALCANTARILLA, Y NADIE MÁS PARECE VERLO',
+    quote: 'Todos flotan aquí abajo. Cuando estés aquí abajo conmigo, tú también flotarás.',
   },
   {
     // id heredado del libro anterior: así no se pierde el progreso guardado

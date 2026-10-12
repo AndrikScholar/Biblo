@@ -2,14 +2,15 @@ import { useEffect, useRef, useState } from 'react'
 import './BillDeal.css'
 import BookModal from './BookModal'
 import books from '../data/books'
+import { isMuted } from '../sound'
 
 // Reconstrucción en React de la escena "trato" que ya tenías en
 // HTML/CSS/JS puro (index.html, style.css, script.js). Misma lógica,
 // pero manejada con estado de React en vez de manipular el DOM directo.
 //
-// Requiere dos archivos estáticos en /public:
-//   - trato.mp4   (ya lo copiamos nosotros)
-//   - terror.mp3  (falta: agrégalo tú en /public/terror.mp3)
+// Usa dos archivos estáticos en /public:
+//   - trato.mp4   (el video del trato)
+//   - terror.mp3  (la risa de Bill al elegir NO)
 //
 // Después de SÍ o NO, además del texto de resultado, se abre la ficha
 // del propio Libro de Bill (la misma escena que usan los demás libros,
@@ -36,7 +37,7 @@ export default function BillDeal({ onExit, synopsisProps }) {
 
     if (choice === 'no') {
       setGlitch(true)
-      audioRef.current?.play().catch(() => {
+      if (!isMuted()) audioRef.current?.play().catch(() => {
         // si falta terror.mp3 o el navegador bloquea el audio, seguimos sin romper la animación
       })
     }

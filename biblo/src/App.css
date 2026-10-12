@@ -3,6 +3,60 @@
   flex-direction: column;
   min-height: 100vh;
   --gutter: clamp(20px, 4vw, 64px);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Fondo: estanterías lejanas grabadas en el papel, con velas que titilan.
+   Mosaicos generados en public/bg; se desvanecen detrás del título. */
+.app::before,
+.app::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-size: 960px auto;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 40px, #000 520px);
+  mask-image: linear-gradient(to bottom, transparent 40px, #000 520px);
+}
+
+.app::before {
+  background-image: url('/bg/estantes.svg');
+  opacity: 0.32;
+}
+
+.app::after {
+  background-image: url('/bg/velas.svg');
+  opacity: 0.22;
+  mix-blend-mode: screen;
+  animation: candle 5s ease-in-out infinite;
+}
+
+@keyframes candle {
+  0%,
+  100% {
+    opacity: 0.22;
+  }
+  18% {
+    opacity: 0.16;
+  }
+  31% {
+    opacity: 0.25;
+  }
+  52% {
+    opacity: 0.18;
+  }
+  74% {
+    opacity: 0.24;
+  }
+}
+
+@media (max-width: 700px) {
+  .app::before,
+  .app::after {
+    background-size: 640px auto;
+  }
 }
 
 /* ---------- Barra superior ---------- */
@@ -15,6 +69,19 @@
   height: 68px;
   padding: 0 var(--gutter);
   border-bottom: 1px solid var(--line);
+}
+
+/* Texto claro sobre la sala oscura. El papel (etiquetas, nota, carrito)
+   conserva la tinta original porque no hereda de estos bloques. */
+.topbar,
+.hero,
+.colophon {
+  --ink-0: #efe3cb;
+  --ink-1: #c9ae84;
+  --ink-2: #8f7c62;
+  --line: rgba(239, 227, 203, 0.14);
+  --cream-2: rgba(239, 227, 203, 0.1);
+  color: var(--ink-0);
 }
 
 .topbar__brand {
@@ -98,15 +165,15 @@
   padding: 8px 8px 8px 14px;
   border: none;
   border-radius: 4px;
-  background: var(--ink-0);
-  color: var(--cream-0);
+  background: linear-gradient(180deg, var(--brass-hi), var(--brass-lo));
+  color: var(--brass-ink);
   font-family: var(--font-data);
   font-size: 0.875rem;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: filter 0.2s ease, transform 0.2s ease;
 }
 
 .cart-button:hover {
-  background: var(--wood-deep);
+  filter: brightness(1.08);
 }
 
 .cart-button:active {
@@ -118,8 +185,8 @@
   height: 24px;
   padding: 0 7px;
   border-radius: 3px;
-  background: var(--cream-0);
-  color: var(--ink-0);
+  background: var(--brass-ink);
+  color: var(--brass-hi);
   display: inline-grid;
   place-items: center;
   font-weight: 700;
@@ -180,7 +247,7 @@ main {
   padding: 18px 18px 0;
   border-radius: 10px 10px 4px 4px;
   background: linear-gradient(180deg, #654e36, var(--wood) 22%, #523f2b);
-  box-shadow: 0 30px 60px -30px rgba(40, 28, 16, 0.7), 0 2px 0 rgba(255, 255, 255, 0.08) inset;
+  box-shadow: 0 34px 70px -24px rgba(0, 0, 0, 0.85), 0 2px 0 rgba(255, 255, 255, 0.08) inset;
 }
 
 .case__sparks {
@@ -307,6 +374,11 @@ main {
   padding: 10px 6px;
   background: rgba(10, 4, 4, 0.78);
   border-radius: 2px;
+}
+
+/* el título ya reparte el hueco arriba y abajo: así queda centrado en el lomo */
+.spine--photo .spine__band--low {
+  margin-top: 0;
 }
 
 .spine__sig {
@@ -598,13 +670,20 @@ main {
 }
 
 /* entre la atmósfera y el contenido: enmarca sin tapar el texto */
-.scene__tentacles {
+.scene__tentacles,
+.scene__boat {
   position: fixed;
   inset: 0;
   z-index: 1;
   width: 100%;
   height: 100%;
   pointer-events: none;
+}
+
+/* el barquito es del mismo color que el texto: un halo oscuro lo separa
+   cuando pasa por debajo (sobre el fondo oscuro no se nota) */
+.scene:has(.scene__boat) .scene__text {
+  text-shadow: 0 0 4px rgba(10, 2, 4, 0.95), 0 1px 2px rgba(10, 2, 4, 0.9);
 }
 
 /* Rueda de Bill: enorme y centrada; solo el anillo asoma por las esquinas */

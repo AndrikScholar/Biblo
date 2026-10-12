@@ -8,6 +8,8 @@ import BillDeal from './components/BillDeal'
 // la escena 3D (Three.js) se descarga aparte, solo cuando hace falta
 const loadRising = () => import('./components/CthulhuRising')
 const CthulhuRising = lazy(loadRising)
+const loadBalloon = () => import('./components/RedBalloon')
+const RedBalloon = lazy(loadBalloon)
 import CartDrawer from './components/CartDrawer'
 import DesertToAsteroid from './components/DesertToAsteroid'
 import AchievementToast from './components/AchievementToast'
@@ -93,7 +95,10 @@ export default function App() {
     const timer = setTimeout(() => {
       for (const b of books) if (b.cover) new Image().src = b.cover
       loadRising()
-      fetch('/scenes/cthulhu.glb').catch(() => {})
+      loadBalloon()
+      for (const url of ['/scenes/cthulhu.glb', '/scenes/globo.glb', '/scenes/sonrisa.glb', '/cajita-musical.mp3']) {
+        fetch(url).catch(() => {})
+      }
       const video = document.createElement('video')
       video.preload = 'auto'
       video.muted = true
@@ -139,6 +144,14 @@ export default function App() {
       {openBook?.special === 'cthulhuRising' && (
         <Suspense fallback={<div className="rising" />}>
           <CthulhuRising
+            onExit={closeBook}
+            synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+          />
+        </Suspense>
+      )}
+      {openBook?.special === 'redBalloon' && (
+        <Suspense fallback={<div className="rising" />}>
+          <RedBalloon
             onExit={closeBook}
             synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
           />

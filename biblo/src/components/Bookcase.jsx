@@ -13,7 +13,7 @@ function Spine({ book, active, visited, onActivate, onOpen, spineRef }) {
     background: book.cover
       ? `linear-gradient(90deg, rgba(10,4,4,.55), rgba(10,4,4,.15) 40%, rgba(10,4,4,.6)), url(${book.cover}) center / cover`
       : atmosphere.bg,
-    color: atmosphere.glow,
+    color: book.spineInk || atmosphere.glow,
   }
 
   return (

@@ -40,6 +40,26 @@
   pointer-events: none;
 }
 
+/* ---- IT: el globo en la alcantarilla ---- */
+.rising--sewer,
+.rising--sewer .rising__veil {
+  background: #010202;
+}
+
+/* la pregunta aparece despacio abajo y desaparece de golpe en el apagón */
+.balloon__ask {
+  top: auto;
+  bottom: 7vh;
+  font-size: clamp(1.15rem, 2.2vw, 1.75rem);
+  color: #e9dcd6;
+  text-shadow: 0 0 22px rgba(216, 40, 47, 0.55), 0 2px 10px rgba(0, 0, 0, 0.9);
+  transition-duration: 1.8s;
+}
+
+.balloon__ask:not(.is-on) {
+  transition: none;
+}
+
 /* ---- El Principito: del desierto al asteroide ---- */
 .rising--stars,
 .rising--stars .rising__veil {

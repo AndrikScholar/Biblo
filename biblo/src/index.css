@@ -16,6 +16,10 @@
   --brass-ink: #3a2a12;
   --night-text: #fbf4e6;
 
+  /* la sala: fondo oscuro de la página, madera en penumbra */
+  --room: #18120d;
+  --room-hi: #2a2019;
+
   --font-display: 'IM Fell English', Georgia, serif;
   --font-body: 'Alegreya', Georgia, serif;
   --font-data: 'Courier Prime', 'Courier New', monospace;
@@ -36,11 +40,11 @@ body {
 }
 
 html {
-  scrollbar-color: var(--ink-1) var(--cream-1);
+  scrollbar-color: var(--wood) var(--room);
 }
 
 body {
-  background: var(--cream-1);
+  background: var(--room) radial-gradient(120% 70% at 50% 0%, var(--room-hi), var(--room)) no-repeat;
   color: var(--ink-0);
   font-family: var(--font-body);
   font-size: 1.0625rem;
