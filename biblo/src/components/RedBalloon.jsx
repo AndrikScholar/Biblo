@@ -6,8 +6,8 @@ import { makeBalloonAudio } from './balloonAudio'
 import './CthulhuRising.css'
 
 // Escena de IT (~13 s): en una alcantarilla inundada, un globo rojo sale del
-// agua y se acerca mientras una cajita de música se queda sin cuerda. En su
-// reflejo aparece Pennywise detrás de ti; apagón, y el globo revienta.
+// agua y se acerca mientras una cajita de música se queda sin cuerda. Se
+// queda mirándote; apagón, y al reventar el globo aparece Pennywise.
 // El dibujo vive en balloonScene.js y el sonido en balloonAudio.js; aquí
 // están la línea de tiempo y la interfaz. Al terminar (o al saltarla) se abre
 // la ficha del libro.

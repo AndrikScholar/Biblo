@@ -208,16 +208,16 @@ export function makeBalloonAudio() {
     bloop(at(T.emerge), 1)
     bloop(at(T.emerge + 0.45), 0.5)
 
-    // tensión mientras aparece el reflejo: aire que sube, cuerdas agudas
+    // tensión mientras el globo te mira: aire que sube, cuerdas agudas
     // disonantes y un grave que crece; todo se corta en el apagón
     const rise = gain(0)
-    rise.gain.setValueAtTime(0, at(T.reflect[0]))
+    rise.gain.setValueAtTime(0, at(T.tension[0]))
     rise.gain.linearRampToValueAtTime(1, at(T.blackout - 0.05))
     rise.gain.linearRampToValueAtTime(0, at(T.blackout))
     send(rise, 1, 0.35)
     const air = noise(white, true)
     const abp = filter('bandpass', 300, 5)
-    abp.frequency.setValueAtTime(300, at(T.reflect[0]))
+    abp.frequency.setValueAtTime(300, at(T.tension[0]))
     abp.frequency.exponentialRampToValueAtTime(2600, at(T.blackout))
     air.connect(abp).connect(gain(0.18)).connect(rise)
     const strings = filter('lowpass', 3200)
@@ -232,11 +232,11 @@ export function makeBalloonAudio() {
       return o
     })
     const sub = osc('sine', 34)
-    sub.frequency.setValueAtTime(34, at(T.reflect[0]))
+    sub.frequency.setValueAtTime(34, at(T.tension[0]))
     sub.frequency.linearRampToValueAtTime(50, at(T.blackout))
     sub.connect(gain(0.22)).connect(rise)
     for (const n of [air, vib, sub, ...high]) {
-      n.start(at(T.reflect[0]))
+      n.start(at(T.tension[0]))
       n.stop(at(T.blackout + 0.1))
     }
 

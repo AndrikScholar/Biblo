@@ -9,8 +9,8 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 
 // Escena 3D de IT: una alcantarilla inundada bajo una rejilla de la calle.
-// Un globo rojo sale del agua, se acerca y se queda mirándote; en su reflejo
-// aparece lo que está detrás de ti. Apagón, respiración, y el globo revienta.
+// Un globo rojo sale del agua, se acerca y se queda mirándote. Apagón,
+// respiración, y al reventar el globo aparece Pennywise.
 // API:
 //   const scene = await createBalloonScene(canvas, { onDrip })
 //   scene.frame(t, k) -> { lamp }   (t en segundos, k = fotogramas de 60 Hz)
@@ -25,7 +25,7 @@ export const T = {
   turn: [7.0, 9.6], // gira despacio hacia ti
   slow: [7.4, 9.4], // la cajita de música se queda sin cuerda
   ask: 8.9,
-  reflect: [9.0, 10.6], // el reflejo muestra lo que hay detrás de la cámara
+  tension: [9.0, 10.6], // el globo te mira: sube la tensión y una luz cálida lo enciende
   nudge: [10.0, 10.6], // se acerca un poco más, solo
   unstable: [9.9, 10.7],
   blackout: 10.7,
@@ -691,9 +691,7 @@ function buildHead(gltf) {
   const head = new THREE.Group()
   head.add(model)
   head.visible = false
-  // la punta de la nariz respecto al pivote: ahí apunta la luz de la cara
-  const faceFwd = (box.max.z - (box.min.z + box.max.z) / 2) * s
-  return { head, faceFwd }
+  return head
 }
 
 // ---------- escena ----------
@@ -781,13 +779,13 @@ export async function createBalloonScene(canvas, { onDrip } = {}) {
   // lo que el globo refleja: se renderiza desde el globo hacia la cámara
   const reflectRT = new THREE.WebGLRenderTarget(small ? 256 : 512, small ? 256 : 512, { type: THREE.HalfFloatType })
   const reflectCam = new THREE.PerspectiveCamera(100, 1, 0.05, 30)
-  const reflect = { map: { value: reflectRT.texture }, amt: { value: 0 } }
+  const reflect = { map: { value: reflectRT.texture }, amt: { value: 0.3 } }
 
   const loader = new GLTFLoader()
   loader.setMeshoptDecoder(MeshoptDecoder)
   const [balloonGltf, headGltf] = await Promise.all([loader.loadAsync(BALLOON_URL), loader.loadAsync(HEAD_URL)])
   const { balloon, bodyMat, stringPivot } = buildBalloon(balloonGltf, reflect)
-  const { head, faceFwd } = buildHead(headGltf)
+  const head = buildHead(headGltf)
   const shards = makeShards(70)
   scene.add(balloon, head, shards.mesh)
 
@@ -801,10 +799,11 @@ export async function createBalloonScene(canvas, { onDrip } = {}) {
   // la luz que rebota bajo la rejilla: deja ver el ladrillo alrededor del haz
   const spill = new THREE.PointLight('#cfe0d6', 0, 7, 1.2)
   spill.position.set(SHAFT.x, CEIL_Y - 0.6, SHAFT.z)
-  const headLight = new THREE.PointLight('#ffb27a', 0, 2.6, 1.6)
+  // luz cálida a tus espaldas: enciende el globo mientras te mira
+  const warm = new THREE.PointLight('#ffb27a', 0, 2.6, 1.6)
   const scareKey = new THREE.PointLight('#f4f0ff', 0, 2.4, 1.6)
   const scareRim = new THREE.PointLight('#ff2a1e', 0, 3, 1.4)
-  scene.add(hemi, spot, spot.target, bounce, spill, headLight, scareKey, scareRim)
+  scene.add(hemi, spot, spot.target, bounce, spill, warm, scareKey, scareRim)
 
   // posprocesado
   const composer = new EffectComposer(renderer)
@@ -836,8 +835,6 @@ export async function createBalloonScene(canvas, { onDrip } = {}) {
   const look = new THREE.Vector3(SHAFT.x, 0.25, SHAFT.z)
   const want = new THREE.Vector3()
   const bPos = new THREE.Vector3()
-  const face = new THREE.Vector3()
-  const toBalloon = new THREE.Vector3()
   const tmp = new THREE.Vector3()
   const scareFrom = new THREE.Vector3()
   const scareTo = new THREE.Vector3()
@@ -931,13 +928,9 @@ export async function createBalloonScene(canvas, { onDrip } = {}) {
     camera.fov = THREE.MathUtils.lerp(50, 38, app) + (portrait ? 16 : 0)
     camera.updateProjectionMatrix()
 
-    // el busto: primero detrás de ti, después delante
-    head.visible = t >= T.reflect[0] && t < T.cut
-    if (s < 0) {
-      head.position.set(camera.position.x + 0.3, camera.position.y + 0.1, camera.position.z + 0.85)
-      head.lookAt(balloon.position)
-      head.rotateZ(-0.22)
-    } else {
+    // el busto: sale de donde estaba el globo cuando este revienta
+    head.visible = s >= 0 && t < T.cut
+    if (s >= 0) {
       if (!popped) {
         popped = true
         balloon.updateMatrixWorld(true)
@@ -955,19 +948,8 @@ export async function createBalloonScene(canvas, { onDrip } = {}) {
       head.position.y += (Math.random() - 0.5) * 0.006
       head.lookAt(camera.position)
       head.rotateZ(0.16 + Math.sin(s * 40) * 0.015)
-    }
-    head.updateMatrixWorld(true)
-    face.set(0, 0, faceFwd).applyMatrix4(head.matrixWorld)
 
-    // la cara detrás de ti se ilumina poco a poco, con una luz que titila
-    const reveal = ease(span(t, T.reflect))
-    toBalloon.copy(balloon.position).sub(face).normalize()
-    headLight.position.copy(face).addScaledVector(toBalloon, 0.35)
-    headLight.position.y -= 0.12
-    headLight.intensity = dark ? 0 : reveal * 3.2 * (0.75 + 0.25 * hash(Math.floor(t * 15)))
-
-    // el susto: luz desde abajo y contraluz rojo
-    if (s >= 0) {
+      // luz desde abajo y contraluz rojo
       tmp.copy(camera.position).sub(head.position).normalize()
       scareKey.position.copy(head.position).addScaledVector(tmp, 0.55)
       scareKey.position.y -= 0.42
@@ -975,6 +957,10 @@ export async function createBalloonScene(canvas, { onDrip } = {}) {
       scareRim.position.copy(head.position).add(tmp.set(0.2, 0.3, -0.5))
       scareRim.intensity = 4
     }
+
+    // mientras te mira, el globo se enciende con una luz que titila
+    warm.position.copy(camera.position).add(tmp.set(0.22, -0.02, 0.3))
+    warm.intensity = dark ? 0 : ease(span(t, T.tension)) * 3.2 * (0.75 + 0.25 * hash(Math.floor(t * 15)))
     shards.step(k)
     if (popped && stringPivot.visible) {
       stringVy += 0.0025 * k
@@ -988,14 +974,11 @@ export async function createBalloonScene(canvas, { onDrip } = {}) {
       if (tmp.y < WATER_Y - 0.6) stringPivot.visible = false
     }
 
-    // reflejo del globo: de un reflejo amplio del túnel pasa a enfocar la cara
-    const focus = ease(span(t, [T.reflect[0] + 0.2, T.reflect[1]]))
-    reflect.amt.value = 0.3 + focus * 0.9
-    if (balloon.visible && (focus > 0 || frameNo % 2 === 0)) {
+    // reflejo del globo: el túnel que tiene enfrente, amplio y tenue
+    // (basta con actualizarlo cada dos fotogramas)
+    if (balloon.visible && frameNo % 2 === 0) {
       reflectCam.position.copy(balloon.position)
-      reflectCam.lookAt(tmp.copy(camera.position).lerp(face, focus))
-      reflectCam.fov = THREE.MathUtils.lerp(100, 26, focus)
-      reflectCam.updateProjectionMatrix()
+      reflectCam.lookAt(camera.position)
       balloon.visible = false
       water.visible = false
       renderer.setRenderTarget(reflectRT)
