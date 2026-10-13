@@ -49,11 +49,13 @@ export const ATMOSPHERES = {
     particle: '#f5d533',
     glow: '#fff3b0',
   },
-  esporas: {
-    label: 'Esporas',
-    bg: 'radial-gradient(120% 100% at 50% 100%, #17321c 0%, #0b190e 55%, #050c06 100%)',
-    particle: '#7fd88a',
-    glow: '#b6f2bd',
+  // Alicia: un atardecer violeta del País de las Maravillas, con pétalos al
+  // viento (oscuro para que la ficha se lea, pero con color)
+  maravillas: {
+    label: 'Maravillas',
+    bg: 'radial-gradient(120% 95% at 30% 0%, #563a8c 0%, #2a2466 46%, #14112f 100%)',
+    particle: '#ff9ec9',
+    glow: '#ffd98a',
   },
   lluvia: {
     label: 'Lluvia',
@@ -176,20 +178,25 @@ const books = [
     quote: 'Solo se ve bien con el corazón. Lo esencial es invisible a los ojos.',
   },
   {
+    // id heredado de "El jardín de los hongos lentos": así no se pierde el progreso guardado
     id: 'jardin-hongos-lentos',
     shelf: 'b',
-    title: 'El jardín de los hongos lentos',
-    signature: 'N-580 · CHE',
-    author: 'Mei Cheng',
-    year: '2011',
-    atmosphere: 'esporas',
-    price: 16.8,
+    title: 'Alicia en el país de las Maravillas',
+    // 10/6: el precio escrito en el sombrero del Sombrerero
+    signature: 'M-106 · CAR',
+    author: 'Lewis Carroll',
+    year: '1865',
+    atmosphere: 'maravillas',
+    special: 'wonderland',
+    edges: 'cheshire',
+    cover: '/covers/alicia.jpg',
+    price: 10.6,
     spine: { height: 0.96, width: 88 },
     description:
-      'Un jardín que crece un milímetro cada siglo. Las esporas conservan el sonido de la última conversación que alguien tuvo cerca de ellas; algunas datan de antes de que existiera el lenguaje.',
-    ambientLabel: 'LAS ESPORAS TARDAN AÑOS EN CRUZAR LA HABITACIÓN; QUÉDATE QUIETO',
+      'Una tarde de verano, aburrida a la orilla del río, Alicia ve pasar corriendo a un Conejo Blanco con chaleco que saca un reloj del bolsillo y se lamenta de que llega tarde. Lo sigue hasta una madriguera, cae durante lo que parece una eternidad y llega a un país donde un pastelito puede volverte gigante, un gato desaparece dejando solo su sonrisa y la hora del té no termina nunca. Allí, entre la Oruga, el Sombrerero y la temible Reina de Corazones, nada es lo que parece, empezando por ella misma.',
+    ambientLabel: 'UNA SONRISA SIN GATO FLOTA ENTRE LAS PÁGINAS, MUCHO DESPUÉS DE QUE EL GATO SE HAYA IDO',
     quote:
-      'Se escucha una risa, muy despacio, estirada a lo largo de trescientos años. Todavía no termina de reírse.',
+      '—Aquí todos estamos locos. Yo estoy loco, tú estás loca. —¿Cómo sabes que yo estoy loca? —preguntó Alicia. —Tienes que estarlo —dijo el Gato—, o no habrías venido.',
   },
   {
     id: 'lluvia-nombre-falso',

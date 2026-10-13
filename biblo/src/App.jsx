@@ -12,6 +12,8 @@ const loadBalloon = () => import('./components/RedBalloon')
 const RedBalloon = lazy(loadBalloon)
 import CartDrawer from './components/CartDrawer'
 import DesertToAsteroid from './components/DesertToAsteroid'
+import Wonderland from './components/Wonderland'
+import { prepareAliceMusic } from './components/aliceMusic'
 import AchievementToast from './components/AchievementToast'
 import books from './data/books'
 import './App.css'
@@ -96,6 +98,7 @@ export default function App() {
       for (const b of books) if (b.cover) new Image().src = b.cover
       loadRising()
       loadBalloon()
+      prepareAliceMusic()
       for (const url of ['/scenes/cthulhu.glb', '/scenes/globo.glb', '/scenes/sonrisa.glb', '/cajita-musical.mp3']) {
         fetch(url).catch(() => {})
       }
@@ -159,6 +162,12 @@ export default function App() {
       )}
       {openBook?.special === 'desertToAsteroid' && (
         <DesertToAsteroid
+          onExit={closeBook}
+          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+        />
+      )}
+      {openBook?.special === 'wonderland' && (
+        <Wonderland
           onExit={closeBook}
           synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
         />

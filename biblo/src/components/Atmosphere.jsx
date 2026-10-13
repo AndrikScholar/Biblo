@@ -17,7 +17,7 @@ const CONFIGS = {
   globos: { count: 60, size: [0.8, 4.2], speed: [0.35, 0.9], motion: 'up', glow: true, balloon: true, vignette: true },
   cosmos: { count: 230, size: [0.4, 1.8], speed: [0.02, 0.06], motion: 'drift', twinkle: true, constellation: true, shooting: true },
   asteroide: { count: 150, size: [0.6, 2.6], speed: [0.02, 0.05], motion: 'drift', twinkle: true, constellation: true, shooting: true, star: true },
-  esporas: { count: 70, size: [2, 6], speed: [0.08, 0.25], motion: 'float', glow: true },
+  maravillas: { count: 70, size: [0.9, 4], speed: [0.35, 1.1], motion: 'wind', glow: true, petal: true },
   lluvia: { count: 190, size: [0.8, 1.4], speed: [11, 16], motion: 'down', streak: true, splash: true, glowSpot: true },
 }
 
@@ -81,6 +81,20 @@ function makeBalloonSprite(color) {
   return c
 }
 
+// Pétalo de rosa de Alicia: se dibuja girando y volteándose con el viento.
+function makePetalSprite(color) {
+  const c = document.createElement('canvas')
+  c.width = c.height = 48
+  const g = c.getContext('2d')
+  g.translate(24, 24)
+  const grad = g.createRadialGradient(-3, -5, 1, 0, 0, 20)
+  grad.addColorStop(0, '#fff2f7')
+  grad.addColorStop(1, color)
+  g.fillStyle = grad
+  g.fill(new Path2D('M0 18 C-15 11 -16 -10 -4 -17 Q0 -12 4 -17 C16 -10 15 11 0 18 Z'))
+  return c
+}
+
 function spawn(cfg, w, h, scatter) {
   const z = rand(0.3, 1)
   const p = {
@@ -135,6 +149,7 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
     const sprite = makeGlowSprite(atmosphere.glow)
     const starSprite = cfg.star ? makeStarSprite(atmosphere.particle, atmosphere.glow) : null
     const balloonSprite = cfg.balloon ? makeBalloonSprite(atmosphere.particle) : null
+    const petalSprite = cfg.petal ? makePetalSprite(atmosphere.particle) : null
 
     let width = 0
     let height = 0
@@ -363,6 +378,15 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
           ctx.translate(dxp, dyp)
           ctx.rotate(Math.sin(p.phase + t / 1100) * 0.12)
           ctx.drawImage(balloonSprite, -s / 2, -s / 2, s, s * 2)
+          ctx.restore()
+        } else if (petalSprite && p.size > 2.4) {
+          // pétalos grandes, girando y volteándose al viento
+          const s = p.size * (width < 700 ? 4 : 6)
+          ctx.save()
+          ctx.translate(dxp, dyp)
+          ctx.rotate(p.phase + t / 1400)
+          ctx.scale(Math.cos(p.phase * 3 + t / 520), 1)
+          ctx.drawImage(petalSprite, -s / 2, -s / 2, s, s)
           ctx.restore()
         } else if (cfg.glow) {
           const s = p.size * 7
