@@ -147,7 +147,8 @@
   background: #14112f;
 }
 
-.wonder__title {
+.wonder__title,
+.quijote__title {
   position: absolute;
   top: 7vh;
   left: 50%;
@@ -163,13 +164,15 @@
   pointer-events: none;
 }
 
-.wonder__title.is-on {
+.wonder__title.is-on,
+.quijote__title.is-on {
   opacity: 1;
   filter: blur(0);
   transform: translate(-50%, 0);
 }
 
-.wonder__name {
+.wonder__name,
+.quijote__name {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 5.4vw, 4.6rem);
   line-height: 1.02;
@@ -179,13 +182,24 @@
   text-shadow: 0 2px 22px rgba(20, 44, 120, 0.8), 0 0 3px rgba(20, 44, 120, 0.55);
 }
 
-.wonder__author {
+.wonder__author,
+.quijote__author {
   margin-top: 0.35em;
   font-family: var(--font-display);
   font-style: italic;
   font-size: clamp(1.15rem, 2.1vw, 1.6rem);
   color: #fff6d6;
   text-shadow: 0 1px 14px rgba(20, 44, 120, 0.9), 0 0 3px rgba(20, 44, 120, 0.6);
+}
+
+/* ---- Don Quijote: cabalgando por La Mancha a la hora dorada ---- */
+/* sobre el cielo dorado, la sombra del título es de tierra, no azul */
+.quijote__name {
+  text-shadow: 0 2px 22px rgba(110, 46, 18, 0.75), 0 0 3px rgba(110, 46, 18, 0.5);
+}
+
+.quijote__author {
+  text-shadow: 0 1px 14px rgba(110, 46, 18, 0.85), 0 0 3px rgba(110, 46, 18, 0.6);
 }
 
 .rising__words.is-on {

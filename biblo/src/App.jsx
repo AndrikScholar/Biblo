@@ -14,6 +14,8 @@ import CartDrawer from './components/CartDrawer'
 import DesertToAsteroid from './components/DesertToAsteroid'
 import Wonderland from './components/Wonderland'
 import { prepareAliceMusic } from './components/aliceMusic'
+import QuijoteRide from './components/QuijoteRide'
+import { prepareQuijoteMusic } from './components/quijoteMusic'
 import AchievementToast from './components/AchievementToast'
 import books from './data/books'
 import './App.css'
@@ -99,6 +101,7 @@ export default function App() {
       loadRising()
       loadBalloon()
       prepareAliceMusic()
+      prepareQuijoteMusic()
       for (const url of ['/scenes/cthulhu.glb', '/scenes/globo.glb', '/scenes/sonrisa.glb', '/cajita-musical.mp3']) {
         fetch(url).catch(() => {})
       }
@@ -168,6 +171,12 @@ export default function App() {
       )}
       {openBook?.special === 'wonderland' && (
         <Wonderland
+          onExit={closeBook}
+          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+        />
+      )}
+      {openBook?.special === 'quijoteRide' && (
+        <QuijoteRide
           onExit={closeBook}
           synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
         />

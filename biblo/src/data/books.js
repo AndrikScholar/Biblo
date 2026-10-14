@@ -17,11 +17,13 @@ export const ATMOSPHERES = {
     particle: '#aebdcc',
     glow: '#e8eefc',
   },
-  arena: {
-    label: 'Arena',
-    bg: 'radial-gradient(120% 100% at 50% 10%, #4a3520 0%, #241a10 55%, #100b07 100%)',
-    particle: '#c9a267',
-    glow: '#e8c88f',
+  // Don Quijote: La Mancha al atardecer, con los campos de trigo y los
+  // molinos pintados por debajo (src/components/manchaScene.js)
+  mancha: {
+    label: 'La Mancha',
+    bg: 'linear-gradient(180deg, #0f1730 0%, #2a3452 40%, #8a7270 60%, #6f5232 66%, #22180f 100%)',
+    particle: '#f3dca4',
+    glow: '#f2c46e',
   },
   presion: {
     label: 'Presión',
@@ -103,20 +105,25 @@ const books = [
       'Día 1: buen viento. Día 40: buen viento. Día 94: buen viento, capitán, buen viento, seguimos con buen viento.',
   },
   {
+    // id heredado de "Las dunas de hierro": así no se pierde el progreso guardado
     id: 'dunas-de-hierro',
     shelf: 'a',
-    title: 'Las dunas de hierro',
-    signature: 'N-208 · ALQ',
-    author: 'D. Alquézar',
-    year: '1972',
-    atmosphere: 'arena',
-    price: 15.4,
-    spine: { height: 0.78, width: 76 },
+    title: 'Don Quijote de la Mancha',
+    // 30: los «treinta, o pocos más, desaforados gigantes» que ve en los molinos
+    signature: 'G-030 · CER',
+    author: 'Miguel de Cervantes',
+    year: '1605',
+    atmosphere: 'mancha',
+    special: 'quijoteRide',
+    cover: '/covers/don-quijote.jpg',
+    // 16,05: el año en que salió la primera parte
+    price: 16.05,
+    spine: { height: 0.92, width: 100 },
     description:
-      'La caravana lleva cuarenta años cruzando la misma duna. El motor no se ha apagado nunca. Los pasajeros que se bajaron a caminar un momento nunca lograron alcanzarla de nuevo.',
-    ambientLabel: 'LA ARENA SALE DEL LOMO Y SE ACUMULA EN LOS PLIEGUES DEL PAPEL',
+      'Un hidalgo manchego lee tantos libros de caballerías que acaba creyéndose uno de sus héroes. Se pone una armadura vieja, llama Rocinante a su caballo flaco, convierte a una labradora del Toboso en la dama de sus pensamientos y sale a los caminos a deshacer agravios. Lo acompaña Sancho Panza, un labrador de su aldea al que ha prometido el gobierno de una ínsula. Donde don Quijote ve gigantes, castillos y ejércitos, Sancho ve molinos, ventas y rebaños de ovejas. Publicada en dos partes, en 1605 y 1615, está considerada la primera novela moderna.',
+    ambientLabel: 'EL VIENTO PEINA EL TRIGO, Y EN LA LOMA LOS MOLINOS AGITAN LOS BRAZOS COMO GIGANTES',
     quote:
-      'Kilómetro 1140: nada. Kilómetro 1141: nada. Kilómetro 1142: alguien golpea el casco desde fuera, pidiendo que lo dejen subir de nuevo.',
+      'En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor.',
   },
   {
     id: 'abisal',

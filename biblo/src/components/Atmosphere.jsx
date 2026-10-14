@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { ATMOSPHERES } from '../data/books'
 import { makeStarSprite } from './starSprite'
+import { createMancha } from './manchaScene'
+import { windAt, startWind } from './manchaWind'
 
 // Motor de atmósferas.
 // Cada libro tiene un preset. Las partículas viven en tres profundidades
@@ -9,10 +11,14 @@ import { makeStarSprite } from './starSprite'
 // libro y se expande hasta llenar la escena.
 //
 // Para añadir un tipo nuevo: una entrada aquí y otra en ATMOSPHERES.
+// Opcionales: `scenery` pinta un paisaje detrás de las partículas, `gusts`
+// da el viento a rachas (lo comparten el paisaje, las partículas y el sonido)
+// y `sound` pone un sonido de ambiente mientras la ficha está abierta.
 const CONFIGS = {
   maldito: { count: 80, size: [1, 3.2], speed: [0.05, 0.18], motion: 'drift', glow: true, pulse: true, attract: true, vignette: true },
   tormenta: { count: 170, size: [0.8, 1.7], speed: [9, 14], motion: 'diagonal', streak: true, flash: true },
-  arena: { count: 240, size: [0.6, 2], speed: [0.9, 2.6], motion: 'wind' },
+  // Don Quijote: paja y polvo dorado que vuelan sobre los campos de La Mancha
+  mancha: { count: 55, size: [0.6, 2.3], speed: [0.5, 1.5], motion: 'wind', glow: true, scenery: createMancha, gusts: windAt, sound: startWind, maxDpr: 1.5 },
   presion: { count: 60, size: [1.5, 4.5], speed: [0.25, 0.7], motion: 'bubble', glow: true, rays: true },
   globos: { count: 60, size: [0.8, 4.2], speed: [0.35, 0.9], motion: 'up', glow: true, balloon: true, vignette: true },
   cosmos: { count: 230, size: [0.4, 1.8], speed: [0.02, 0.06], motion: 'drift', twinkle: true, constellation: true, shooting: true },
@@ -145,7 +151,11 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const dpr = Math.min(window.devicePixelRatio || 1, cfg.maxDpr || 2)
+    const opened = performance.now()
+    const gust = cfg.gusts ? (ms) => cfg.gusts((ms - opened) / 1000) : null
+    const scenery = cfg.scenery?.(gust)
+    const sound = cfg.sound?.(gust)
     const sprite = makeGlowSprite(atmosphere.glow)
     const starSprite = cfg.star ? makeStarSprite(atmosphere.particle, atmosphere.glow) : null
     const balloonSprite = cfg.balloon ? makeBalloonSprite(atmosphere.particle) : null
@@ -186,6 +196,7 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
       canvas.width = width * dpr
       canvas.height = height * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      scenery?.resize(width, height, dpr)
     }
 
     function onPointerMove(e) {
@@ -273,9 +284,12 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
 
       ctx.clearRect(0, 0, width, height)
       ctx.globalAlpha = intro
+      scenery?.draw(ctx, t, pointer.px, pointer.py, intro)
       drawBackdrop(t)
 
-      const wind = cfg.motion === 'wind' ? 1 + Math.max(0, Math.sin(t / 2100)) * 1.6 : 1
+      let wind = 1
+      if (gust) wind = 0.4 + gust(t) * 2.6
+      else if (cfg.motion === 'wind') wind = 1 + Math.max(0, Math.sin(t / 2100)) * 1.6
       const nearPointer = []
 
       for (const p of particles) {
@@ -506,11 +520,13 @@ export default function Atmosphere({ kind, className = 'atmosphere' }) {
       window.removeEventListener('pointermove', onPointerMove)
       document.removeEventListener('pointerleave', onPointerLeave)
       if (rafId) cancelAnimationFrame(rafId)
+      scenery?.dispose()
+      sound?.stop()
     }
   }, [cfg, atmosphere])
 
   return (
-    <div className={className} style={{ background: atmosphere.bg }} aria-hidden="true">
+    <div className={className} data-kind={kind} style={{ background: atmosphere.bg }} aria-hidden="true">
       <canvas ref={canvasRef} />
     </div>
   )
