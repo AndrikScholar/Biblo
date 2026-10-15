@@ -1,0 +1,225 @@
+/* ---- Harry Potter: la carta de Hogwarts ---- */
+.hp-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  perspective: 1200px;
+  overflow: hidden;
+}
+
+/* la ficha espera debajo: su portada aparece cuando el libro aterriza encima
+   y el texto, cuando la carta se deshace */
+.hp-intro ~ .scene .scene__book {
+  visibility: hidden;
+}
+
+.hp-intro.is-landed ~ .scene .scene__book {
+  visibility: visible;
+}
+
+.hp-intro ~ .scene .scene__text,
+.hp-intro ~ .scene .scene__controls {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.hp-intro.is-text ~ .scene .scene__text,
+.hp-intro.is-text ~ .scene .scene__controls {
+  opacity: 1;
+}
+
+/* las líneas de la ficha esperan quietas; al deshacerse la carta vuelven a
+   entrar una a una, con la subida de siempre */
+.hp-intro:not(.is-text) ~ .scene .scene__text > * {
+  animation: none;
+}
+
+.hp-intro__dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 8, 14, 0.5);
+  opacity: 0;
+}
+
+.hp-env {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(420px, 80vw);
+  aspect-ratio: 1 / 0.64;
+  translate: -50% -50%;
+  transform-style: preserve-3d;
+}
+
+.hp-env__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.hp-env__back {
+  transform: rotateY(180deg);
+}
+
+/* pergamino amarillento, como el gouache de la portada */
+.hp-env__front,
+.hp-env__body,
+.hp-env__flap-out,
+.hp-env__flap-in,
+.hp-letter {
+  background: radial-gradient(120% 90% at 30% 25%, #f3e5bd 0%, #e3cc95 62%, #cbae74 100%);
+}
+
+.hp-env__front,
+.hp-env__body {
+  border-radius: 3px;
+  box-shadow: 0 22px 40px -16px rgba(0, 0, 0, 0.7);
+}
+
+.hp-env__to {
+  position: absolute;
+  left: 36%;
+  top: 30%;
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: min(19px, 4.3vw);
+  line-height: 1.35;
+  color: #1d6a45;
+}
+
+.hp-env__body {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+/* los pliegues del bolsillo: la solapa de abajo y la del lado en sombra */
+.hp-env__body::before,
+.hp-env__body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.hp-env__body::before {
+  background: linear-gradient(rgba(120, 84, 34, 0), rgba(120, 84, 34, 0.22));
+  clip-path: polygon(0 100%, 50% 44%, 100% 100%);
+}
+
+.hp-env__body::after {
+  background: rgba(120, 84, 34, 0.12);
+  clip-path: polygon(0 0, 47% 54%, 0 100%);
+}
+
+.hp-env__flap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 56%;
+  z-index: 4;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+}
+
+.hp-env__flap-out,
+.hp-env__flap-in {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  backface-visibility: hidden;
+}
+
+.hp-env__flap-out {
+  box-shadow: inset 0 -30px 30px -20px rgba(120, 84, 34, 0.35);
+}
+
+.hp-env__flap-in {
+  transform: rotateX(180deg);
+  filter: brightness(0.85);
+}
+
+/* el sello de lacre púrpura con la H del escudo, como lo describe el libro */
+.hp-seal {
+  position: absolute;
+  left: 50%;
+  top: 53%;
+  z-index: 5;
+  width: 17%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+}
+
+.hp-seal__half {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 47% 53% 49% 51%;
+  background: radial-gradient(circle at 35% 30%, #a368b0, #5e2a6b 55%, #391443);
+  box-shadow: inset 0 -3px 6px rgba(20, 4, 24, 0.5), 0 2px 5px rgba(0, 0, 0, 0.45);
+  font-family: var(--font-display);
+  font-size: min(30px, 6vw);
+  color: rgba(40, 10, 46, 0.7);
+  text-shadow: 0 1px 0 rgba(255, 220, 255, 0.3);
+}
+
+.hp-seal__half:first-child {
+  clip-path: polygon(0 0, 53% 0, 46% 30%, 56% 55%, 47% 80%, 52% 100%, 0 100%);
+}
+
+.hp-seal__half:last-child {
+  clip-path: polygon(53% 0, 100% 0, 100% 100%, 52% 100%, 47% 80%, 56% 55%, 46% 30%);
+}
+
+/* el libro y la carta: se escalan desde la esquina para volar a su sitio */
+.hp-book,
+.hp-letter {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  transform-origin: 0 0;
+}
+
+.hp-book {
+  width: max-content;
+  perspective: 1200px;
+}
+
+.hp-letter {
+  box-sizing: border-box;
+  padding: 26px 30px;
+  border-radius: 2px;
+  box-shadow: 0 20px 44px -18px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  color: #1d6a45;
+  font-family: var(--font-display);
+}
+
+/* la carta sube un poco y se desvanece mientras entran las líneas de la ficha */
+.hp-intro.is-text .hp-letter {
+  opacity: 0;
+  filter: blur(3px);
+  translate: 0 -14px;
+  transition: opacity 0.8s ease 0.25s, filter 0.8s ease 0.25s, translate 0.8s var(--ease-out) 0.25s;
+}
+
+.hp-letter__head {
+  margin: 0 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 3px double rgba(29, 106, 69, 0.45);
+  text-align: center;
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hp-letter__body {
+  margin: 0;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.55;
+}

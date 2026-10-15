@@ -59,6 +59,13 @@ export const ATMOSPHERES = {
     particle: '#ff9ec9',
     glow: '#ffd98a',
   },
+  // Harry Potter: Hogwarts de noche, como en su portada (src/components/hogwartsScene.js)
+  hogwarts: {
+    label: 'Hogwarts',
+    bg: 'linear-gradient(180deg, #08182a 0%, #15374b 40%, #2f6571 70%, #06171b 100%)',
+    particle: '#fff1c2',
+    glow: '#ffd65c',
+  },
   lluvia: {
     label: 'Lluvia',
     bg: 'radial-gradient(80% 60% at 65% 30%, #3a2c17 0%, #1a2028 45%, #0a0d10 100%)',
@@ -206,20 +213,25 @@ const books = [
       '—Aquí todos estamos locos. Yo estoy loco, tú estás loca. —¿Cómo sabes que yo estoy loca? —preguntó Alicia. —Tienes que estarlo —dijo el Gato—, o no habrías venido.',
   },
   {
+    // id heredado de "Lluvia sobre el nombre falso": así no se pierde el progreso guardado
     id: 'lluvia-nombre-falso',
     shelf: 'b',
-    title: 'Lluvia sobre el nombre falso',
-    signature: 'N-345 · SER',
-    author: 'Vera Serrano',
-    year: '1956',
-    atmosphere: 'lluvia',
-    price: 14.2,
-    spine: { height: 0.8, width: 82 },
+    title: 'Harry Potter y la piedra filosofal',
+    // 4: el número 4 de Privet Drive, la casa de los Dursley
+    signature: 'P-004 · ROW',
+    author: 'J. K. Rowling',
+    year: '1997',
+    atmosphere: 'hogwarts',
+    special: 'hogwartsLetter',
+    cover: '/covers/harry-potter.jpg',
+    // 9,75: el andén nueve y tres cuartos
+    price: 9.75,
+    spine: { height: 0.9, width: 92 },
     description:
-      'Cuatro testigos describen al mismo hombre bajo la misma farola, y ninguno da el mismo nombre. El expediente lleva doce años abierto. Sigue lloviendo en cada página, incluso en las fotocopias.',
-    ambientLabel: 'LA LLUVIA EMPIEZA EN LA PÁGINA CINCO Y NO SE DETIENE HASTA QUE CIERRAS EL LIBRO',
+      'Harry Potter lleva diez años viviendo con sus tíos, los Dursley, que lo tratan como un estorbo y lo hacen dormir en la alacena de debajo de la escalera. Poco antes de cumplir once años empiezan a llegarle cartas que sus tíos se empeñan en que no lea, hasta que un hombre enorme llamado Hagrid aparece para contarle la verdad: Harry es un mago y tiene una plaza esperándolo en Hogwarts, el Colegio de Magia y Hechicería. Allí descubre el quidditch, hace amigos de verdad por primera vez y empieza a entender por qué todo el mundo mágico conoce su nombre, y que en algún lugar del castillo se guarda un secreto. Fue la primera novela de J. K. Rowling, publicada en Londres en 1997, y abrió una saga de siete libros.',
+    ambientLabel: 'EN EL CASTILLO SIGUEN ENCENDIDAS LAS VENTANAS, Y DE VEZ EN CUANDO UNA LECHUZA CRUZA EL LAGO CON UNA CARTA',
     quote:
-      'Testigo 1: se llamaba Marco. Testigo 2: nunca dio su nombre. Testigo 3: se llamaba Marco, pero no el mismo Marco. Testigo 4: llovía demasiado para ver bien.',
+      'El señor y la señora Dursley, que vivían en el número 4 de Privet Drive, estaban orgullosos de decir que eran muy normales, afortunadamente.',
   },
 ]
 

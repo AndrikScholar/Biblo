@@ -16,6 +16,7 @@ import Wonderland from './components/Wonderland'
 import { prepareAliceMusic } from './components/aliceMusic'
 import QuijoteRide from './components/QuijoteRide'
 import { prepareQuijoteMusic } from './components/quijoteMusic'
+import HogwartsLetter from './components/HogwartsLetter'
 import AchievementToast from './components/AchievementToast'
 import books from './data/books'
 import './App.css'
@@ -177,6 +178,12 @@ export default function App() {
       )}
       {openBook?.special === 'quijoteRide' && (
         <QuijoteRide
+          onExit={closeBook}
+          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+        />
+      )}
+      {openBook?.special === 'hogwartsLetter' && (
+        <HogwartsLetter
           onExit={closeBook}
           synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
         />
