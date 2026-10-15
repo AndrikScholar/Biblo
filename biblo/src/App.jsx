@@ -17,6 +17,8 @@ import { prepareAliceMusic } from './components/aliceMusic'
 import QuijoteRide from './components/QuijoteRide'
 import { prepareQuijoteMusic } from './components/quijoteMusic'
 import HogwartsLetter from './components/HogwartsLetter'
+import CidRest from './components/CidRest'
+import { prepareCidMusic } from './components/cidMusic'
 import AchievementToast from './components/AchievementToast'
 import books from './data/books'
 import './App.css'
@@ -103,6 +105,7 @@ export default function App() {
       loadBalloon()
       prepareAliceMusic()
       prepareQuijoteMusic()
+      prepareCidMusic()
       for (const url of ['/scenes/cthulhu.glb', '/scenes/globo.glb', '/scenes/sonrisa.glb', '/cajita-musical.mp3']) {
         fetch(url).catch(() => {})
       }
@@ -178,6 +181,12 @@ export default function App() {
       )}
       {openBook?.special === 'quijoteRide' && (
         <QuijoteRide
+          onExit={closeBook}
+          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+        />
+      )}
+      {openBook?.special === 'cidRest' && (
+        <CidRest
           onExit={closeBook}
           synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
         />

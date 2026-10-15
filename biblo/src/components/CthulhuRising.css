@@ -202,6 +202,15 @@
   text-shadow: 0 1px 14px rgba(110, 46, 18, 0.85), 0 0 3px rgba(110, 46, 18, 0.6);
 }
 
+/* ---- El Cid: el mismo título, con sombra de pizarra sobre el cielo nublado ---- */
+.cid__name {
+  text-shadow: 0 2px 22px rgba(14, 18, 16, 0.85), 0 0 3px rgba(14, 18, 16, 0.6);
+}
+
+.cid__author {
+  text-shadow: 0 1px 14px rgba(14, 18, 16, 0.9), 0 0 3px rgba(14, 18, 16, 0.6);
+}
+
 .rising__words.is-on {
   opacity: 1;
   filter: blur(0);

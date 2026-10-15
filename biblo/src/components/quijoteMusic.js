@@ -20,7 +20,7 @@ const LEN = T.end + 3
 const hz = (m) => 440 * Math.pow(2, (m - 69) / 12)
 const at = (bar, beat = 0) => (bar - 1) * BAR + beat * BEAT
 
-function noiseBuffer(c, sec) {
+export function noiseBuffer(c, sec) {
   const buf = c.createBuffer(1, Math.floor(c.sampleRate * sec), c.sampleRate)
   const d = buf.getChannelData(0)
   for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1
@@ -28,7 +28,7 @@ function noiseBuffer(c, sec) {
 }
 
 // sala: ruido estéreo que decae y se oscurece
-function impulse(c, sec, decay) {
+export function impulse(c, sec, decay) {
   const len = Math.floor(c.sampleRate * sec)
   const buf = c.createBuffer(2, len, c.sampleRate)
   for (let ch = 0; ch < 2; ch++) {
@@ -44,7 +44,7 @@ function impulse(c, sec, decay) {
 }
 
 // cuerda pulsada (Karplus-Strong) con la pérdida de una cuerda de nailon
-function pluck(c, f, sec) {
+export function pluck(c, f, sec) {
   const sr = c.sampleRate
   const N = Math.max(2, Math.round(sr / f))
   const buf = c.createBuffer(1, Math.floor(sr * sec), sr)

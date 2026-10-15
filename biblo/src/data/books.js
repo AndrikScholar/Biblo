@@ -59,6 +59,14 @@ export const ATMOSPHERES = {
     particle: '#ff9ec9',
     glow: '#ffd98a',
   },
+  // El Cid: el campo de flores de su entrada, bajo un cielo nublado
+  // (src/components/cidScene.js)
+  cid: {
+    label: 'Campo de flores',
+    bg: 'linear-gradient(180deg, #36413e 0%, #65706a 30%, #aeb2a3 42%, #435a2a 60%, #1e2a14 100%)',
+    particle: '#c8322a',
+    glow: '#e8c46a',
+  },
   // Harry Potter: Hogwarts de noche, como en su portada (src/components/hogwartsScene.js)
   hogwarts: {
     label: 'Hogwarts',
@@ -96,20 +104,24 @@ const books = [
       'Paso uno: pide un deseo pequeño. Paso dos: agradece en voz alta. Paso tres: no leas el paso cuatro.',
   },
   {
+    // id heredado de "El canto de Ragnarök": así no se pierde el progreso guardado
     id: 'ragnarok',
     shelf: 'a',
-    title: 'El canto de Ragnarök',
-    signature: 'N-411 · HAL',
-    author: 'Sigrid Halvorsen',
-    year: '1998',
-    atmosphere: 'tormenta',
-    price: 18.9,
-    spine: { height: 0.84, width: 80 },
+    title: 'El Cantar del mío Cid',
+    // 207: la copia de Per Abbat (1207), el único manuscrito que se conserva
+    signature: 'C-207 · ABB',
+    author: 'Anónimo',
+    year: 'c. 1200',
+    atmosphere: 'cid',
+    special: 'cidRest',
+    cover: '/covers/mio-cid.webp',
+    // 12,07: el año de esa copia
+    price: 12.07,
+    spine: { height: 0.86, width: 84 },
     description:
-      'Un cuaderno de bitácora que ningún tripulante reclamó jamás. Narra la misma travesía siete veces, con siete finales distintos, y en las siete el barco llega a puerto sin nadie a bordo.',
-    ambientLabel: 'LA TORMENTA CRUZA LA PÁGINA Y MOJA LOS DEDOS QUE LA SOSTIENEN',
-    quote:
-      'Día 1: buen viento. Día 40: buen viento. Día 94: buen viento, capitán, buen viento, seguimos con buen viento.',
+      'Acusado ante el rey Alfonso VI por la envidia de algunos nobles, Rodrigo Díaz de Vivar, el Cid Campeador, es desterrado de Castilla. Con solo nueve días para abandonar el reino, deja a su mujer, doña Jimena, y a sus dos hijas en el monasterio de San Pedro de Cardeña, y parte con un puñado de fieles a ganarse el pan y la honra con su espada, sin dejar de buscar el perdón de su señor. Es el poema épico más antiguo que se conserva de la literatura española: un cantar de gesta anónimo, compuesto hacia 1200, que nos ha llegado en una única copia firmada por Per Abbat en 1207 y que no se imprimió hasta 1779.',
+    ambientLabel: 'EL VIENTO PEINA EL CAMPO DE FLORES DONDE EL CAMPEADOR SE DETUVO A RECOBRAR EL ALIENTO',
+    quote: '¡Dios, qué buen vassallo, si oviesse buen señore!',
   },
   {
     // id heredado de "Las dunas de hierro": así no se pierde el progreso guardado

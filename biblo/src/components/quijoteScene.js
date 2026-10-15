@@ -823,7 +823,7 @@ function wheatRow(ctx, t, scroll, base, x0, x1, k) {
 // de la cámara (k px por unidad), y se le pone luz: un filo cálido en los
 // bordes que miran al sol con un resplandor que se sale, la luz rojiza que
 // rebota en la tierra por debajo, la del cielo por arriba y su sombra larga.
-function makeLight() {
+export function makeLight() {
   const a = document.createElement('canvas')
   const b = document.createElement('canvas')
   const ga = a.getContext('2d')

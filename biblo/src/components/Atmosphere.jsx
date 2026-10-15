@@ -4,6 +4,7 @@ import { makeStarSprite } from './starSprite'
 import { createMancha } from './manchaScene'
 import { windAt, startWind } from './manchaWind'
 import { createHogwarts } from './hogwartsScene'
+import { createCidField } from './cidScene'
 
 // Motor de atmósferas.
 // Cada libro tiene un preset. Las partículas viven en tres profundidades
@@ -27,6 +28,8 @@ const CONFIGS = {
   maravillas: { count: 70, size: [0.9, 4], speed: [0.35, 1.1], motion: 'wind', glow: true, petal: true },
   // Harry Potter: el castillo de noche; las partículas son motas de luz que flotan
   hogwarts: { count: 35, size: [0.5, 1.6], speed: [0.03, 0.08], motion: 'drift', twinkle: true, glow: true, scenery: createHogwarts, maxDpr: 1.5 },
+  // El Cid: pétalos de amapola que vuelan con las rachas sobre el campo de flores
+  cid: { count: 40, size: [1, 3.2], speed: [0.4, 1.2], motion: 'wind', petal: true, scenery: createCidField, gusts: windAt, maxDpr: 1.5 },
   lluvia: { count: 190, size: [0.8, 1.4], speed: [11, 16], motion: 'down', streak: true, splash: true, glowSpot: true },
 }
 
