@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { OwlIcon, BagIcon, SoundOnIcon, SoundOffIcon } from './Icons'
+import { OwlIcon, BagIcon, SoundOnIcon, SoundOffIcon, UserIcon, UserCheckIcon } from './Icons'
 import books, { ATMOSPHERES } from '../data/books'
 import { isMuted, setMuted } from '../sound'
 
-export default function Topbar({ visited, cartCount, onOpenCart }) {
+export default function Topbar({ visited, cartCount, onOpenCart, user, onOpenAccount }) {
   const [muted, setMutedState] = useState(isMuted)
 
   function toggleSound() {
@@ -43,6 +43,16 @@ export default function Topbar({ visited, cartCount, onOpenCart }) {
           title={muted ? 'Activar sonido' : 'Silenciar'}
         >
           {muted ? <SoundOffIcon width="20" height="20" /> : <SoundOnIcon width="20" height="20" />}
+        </button>
+
+        <button
+          type="button"
+          className="sound-button"
+          onClick={onOpenAccount}
+          aria-label={user ? `Tu cuenta (${user.nombre})` : 'Entrar o crear una cuenta'}
+          title={user ? `Tu cuenta (${user.nombre})` : 'Entrar o crear una cuenta'}
+        >
+          {user ? <UserCheckIcon width="20" height="20" /> : <UserIcon width="20" height="20" />}
         </button>
 
         <button type="button" className="cart-button" onClick={onOpenCart}>

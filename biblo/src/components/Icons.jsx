@@ -10,6 +10,8 @@ export {
   BookOpen as OpenBookIcon,
   SpeakerHigh as SoundOnIcon,
   SpeakerSlash as SoundOffIcon,
+  UserCircle as UserIcon,
+  UserCircleCheck as UserCheckIcon,
 } from '@phosphor-icons/react'
 
 export function OwlIcon(props) {

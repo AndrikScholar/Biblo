@@ -11,6 +11,7 @@ const CthulhuRising = lazy(loadRising)
 const loadBalloon = () => import('./components/RedBalloon')
 const RedBalloon = lazy(loadBalloon)
 import CartDrawer from './components/CartDrawer'
+import AccountDrawer from './components/AccountDrawer'
 import DesertToAsteroid from './components/DesertToAsteroid'
 import Wonderland from './components/Wonderland'
 import { prepareAliceMusic } from './components/aliceMusic'
@@ -20,7 +21,8 @@ import HogwartsLetter from './components/HogwartsLetter'
 import CidRest from './components/CidRest'
 import { prepareCidMusic } from './components/cidMusic'
 import AchievementToast from './components/AchievementToast'
-import books from './data/books'
+import books, { loadCatalog } from './data/books'
+import { api } from './api'
 import './App.css'
 
 const VISITED_KEY = 'biblo:visited-books'
@@ -56,15 +58,34 @@ export default function App() {
   // lomo bajo el cursor (o con el foco); null cuando no hay ninguno
   const [activeId, setActiveId] = useState(null)
 
+  const [accountOpen, setAccountOpen] = useState(false)
+  const [user, setUser] = useState(null)
+  // sube tras cada compra, al refrescar el stock del catálogo (que se
+  // actualiza dentro de `books`, fuera del estado de React)
+  const [, setCatalogVersion] = useState(0)
+
   const cartCount = cart.reduce((n, i) => n + i.qty, 0)
   const inCart = (id) => cart.some((i) => i.id === id)
+  const canAdd = (id) => (cart.find((i) => i.id === id)?.qty ?? 0) < (books.find((b) => b.id === id)?.stock ?? 0)
+  const synopsisProps = openBook && { inCart: inCart(openBook.id), canAdd: canAdd(openBook.id), onAdd: addToCart, direct: true }
+
+  useEffect(() => {
+    api('cuenta.php').then(setUser, () => {})
+  }, [])
 
   function updateCart(next) {
     setCart(next)
     saveJSON(CART_KEY, next)
   }
 
+  async function handleOrdered({ keepCart = false } = {}) {
+    if (!keepCart) updateCart([])
+    await loadCatalog().catch(() => {})
+    setCatalogVersion((v) => v + 1)
+  }
+
   function addToCart(id) {
+    if (!canAdd(id)) return
     const exists = cart.some((i) => i.id === id)
     updateCart(exists ? cart.map((i) => (i.id === id ? { ...i, qty: i.qty + 1 } : i)) : [...cart, { id, qty: 1 }])
     setAdded((prev) => ({ id, n: (prev?.n || 0) + 1 }))
@@ -120,11 +141,18 @@ export default function App() {
 
   const closeBook = useCallback(() => setOpenBook(null), [])
   const closeCart = useCallback(() => setCartOpen(false), [])
+  const closeAccount = useCallback(() => setAccountOpen(false), [])
   const hideAchievement = useCallback(() => setShowAchievement(false), [])
 
   return (
     <div className="app">
-      <Topbar visited={visited} cartCount={cartCount} onOpenCart={() => setCartOpen(true)} />
+      <Topbar
+        visited={visited}
+        cartCount={cartCount}
+        onOpenCart={() => setCartOpen(true)}
+        user={user}
+        onOpenAccount={() => setAccountOpen(true)}
+      />
       <Hero />
 
       <main>
@@ -133,6 +161,7 @@ export default function App() {
           onActivate={setActiveId}
           visited={visited}
           inCart={inCart}
+          canAdd={canAdd}
           onOpen={handleOpen}
           onAdd={addToCart}
         />
@@ -148,14 +177,14 @@ export default function App() {
       {openBook?.special === 'billDeal' && (
         <BillDeal
           onExit={closeBook}
-          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+          synopsisProps={synopsisProps}
         />
       )}
       {openBook?.special === 'cthulhuRising' && (
         <Suspense fallback={<div className="rising" />}>
           <CthulhuRising
             onExit={closeBook}
-            synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+            synopsisProps={synopsisProps}
           />
         </Suspense>
       )}
@@ -163,38 +192,38 @@ export default function App() {
         <Suspense fallback={<div className="rising" />}>
           <RedBalloon
             onExit={closeBook}
-            synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+            synopsisProps={synopsisProps}
           />
         </Suspense>
       )}
       {openBook?.special === 'desertToAsteroid' && (
         <DesertToAsteroid
           onExit={closeBook}
-          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+          synopsisProps={synopsisProps}
         />
       )}
       {openBook?.special === 'wonderland' && (
         <Wonderland
           onExit={closeBook}
-          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+          synopsisProps={synopsisProps}
         />
       )}
       {openBook?.special === 'quijoteRide' && (
         <QuijoteRide
           onExit={closeBook}
-          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+          synopsisProps={synopsisProps}
         />
       )}
       {openBook?.special === 'cidRest' && (
         <CidRest
           onExit={closeBook}
-          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+          synopsisProps={synopsisProps}
         />
       )}
       {openBook?.special === 'hogwartsLetter' && (
         <HogwartsLetter
           onExit={closeBook}
-          synopsisProps={{ inCart: inCart(openBook.id), onAdd: addToCart, direct: true }}
+          synopsisProps={synopsisProps}
         />
       )}
       {openBook && !openBook.special && (
@@ -203,6 +232,7 @@ export default function App() {
           origin={origin}
           onClose={closeBook}
           inCart={inCart(openBook.id)}
+          canAdd={canAdd(openBook.id)}
           onAdd={addToCart}
         />
       )}
@@ -225,7 +255,17 @@ export default function App() {
         </div>
       )}
 
-      {cartOpen && <CartDrawer items={cart} onChange={updateCart} onClose={closeCart} />}
+      {cartOpen && (
+        <CartDrawer
+          items={cart}
+          onChange={updateCart}
+          onClose={closeCart}
+          user={user}
+          onUser={setUser}
+          onOrdered={handleOrdered}
+        />
+      )}
+      {accountOpen && <AccountDrawer user={user} onUser={setUser} onClose={closeAccount} />}
 
       {showAchievement && (
         <AchievementToast

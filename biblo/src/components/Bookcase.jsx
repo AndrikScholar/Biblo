@@ -39,7 +39,7 @@ function Spine({ book, active, visited, onActivate, onOpen, spineRef }) {
   )
 }
 
-export default function Bookcase({ activeId, onActivate, visited, inCart, onOpen, onAdd }) {
+export default function Bookcase({ activeId, onActivate, visited, inCart, canAdd, onOpen, onAdd }) {
   const caseRef = useRef(null)
   const spineRef = useRef(null)
   const hideTimer = useRef(null)
@@ -113,10 +113,17 @@ export default function Bookcase({ activeId, onActivate, visited, inCart, onOpen
                   type="button"
                   className="tag__add"
                   onClick={() => onAdd(active.id)}
-                  aria-label={inCart(active.id) ? `Añadir otro ejemplar de ${active.title}` : `Añadir ${active.title} al carrito`}
+                  disabled={!canAdd(active.id)}
+                  aria-label={
+                    active.stock === 0
+                      ? `${active.title} está agotado`
+                      : inCart(active.id)
+                        ? `Añadir otro ejemplar de ${active.title}`
+                        : `Añadir ${active.title} al carrito`
+                  }
                 >
                   {inCart(active.id) ? <CheckIcon width="16" height="16" /> : <PlusIcon width="16" height="16" />}
-                  {inCart(active.id) ? 'En el carrito' : 'Añadir'}
+                  {active.stock === 0 ? 'Agotado' : inCart(active.id) ? 'En el carrito' : 'Añadir'}
                 </button>
               </div>
             </div>

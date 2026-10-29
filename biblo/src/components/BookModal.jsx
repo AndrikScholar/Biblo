@@ -7,6 +7,7 @@ import Asteroid from './Asteroid'
 import PaperBoat from './PaperBoat'
 import CheshireGrin from './CheshireGrin'
 import { ATMOSPHERES, formatPrice } from '../data/books'
+import { stockLabel } from '../api'
 import { CloseIcon, EyeIcon, PlusIcon, CheckIcon } from './Icons'
 
 const CLOSE_MS = 520
@@ -15,7 +16,7 @@ const CLOSE_MS = 520
 // `origin` es el rectángulo del lomo; la escena crece desde ahí.
 // `direct`: viene de otra escena a pantalla completa, así que aparece sin la
 // apertura circular (que dejaría ver la estantería un instante).
-export default function BookModal({ book, origin, onClose, inCart = false, onAdd, direct = false }) {
+export default function BookModal({ book, origin, onClose, inCart = false, canAdd = true, onAdd, direct = false }) {
   const [immersive, setImmersive] = useState(false)
   const [closing, setClosing] = useState(false)
   const closeRef = useRef(null)
@@ -103,10 +104,11 @@ export default function BookModal({ book, origin, onClose, inCart = false, onAdd
 
           <div className="scene__buy">
             <span className="scene__price">{formatPrice(book.price)}</span>
-            <button type="button" className="scene__add" onClick={() => onAdd?.(book.id)}>
+            <button type="button" className="scene__add" onClick={() => onAdd?.(book.id)} disabled={!canAdd}>
               <PlusIcon width="18" height="18" />
-              {inCart ? 'Añadir otro' : 'Añadir al carrito'}
+              {book.stock === 0 ? 'Agotado' : inCart ? 'Añadir otro' : 'Añadir al carrito'}
             </button>
+            {book.stock > 0 && <span className="scene__stock">{stockLabel(book.stock)}</span>}
             {inCart && (
               <span className="scene__incart">
                 <CheckIcon width="16" height="16" /> Ya está en tu carrito

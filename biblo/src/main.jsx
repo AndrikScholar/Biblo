@@ -10,9 +10,17 @@ import '@fontsource/courier-prime/400.css'
 import '@fontsource/courier-prime/700.css'
 import './index.css'
 import App from './App.jsx'
+import Offline from './components/Offline'
+import { loadCatalog } from './data/books'
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+const root = createRoot(document.getElementById('root'))
+
+loadCatalog().then(
+  () =>
+    root.render(
+      <StrictMode>
+        <App />
+      </StrictMode>,
+    ),
+  () => root.render(<Offline />),
 )
