@@ -9,7 +9,7 @@ import '@fontsource/alegreya/500.css'
 import '@fontsource/courier-prime/400.css'
 import '@fontsource/courier-prime/700.css'
 import './index.css'
-import App from './App.jsx'
+import Root from './Root.jsx'
 import Offline from './components/Offline'
 import { loadCatalog } from './data/books'
 
@@ -19,7 +19,7 @@ loadCatalog().then(
   () =>
     root.render(
       <StrictMode>
-        <App />
+        <Root />
       </StrictMode>,
     ),
   () => root.render(<Offline />),

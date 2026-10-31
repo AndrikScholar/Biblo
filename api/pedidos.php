@@ -1,27 +1,16 @@
 <?php
-// GET: los pedidos del usuario con sus libros y la dirección de envío.
-// POST { direccion_id, libros: [{ id, cantidad }] }: crea el pedido y
-// descuenta el stock, todo o nada.
+// GET: los pedidos del usuario con sus libros, la dirección y el último
+// intento de pago.
+// POST { direccion_id, libros: [{ id, cantidad }] }: crea el pedido como
+// 'pendiente'. El stock no se toca hasta que se paga (ver pagos.php).
 require 'comun.php';
 $uid = usuario_id();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  // Envío simulado: a los 2 minutos el paquete sale y el día de la
-  // entrega estimada llega. Desde phpMyAdmin también se puede cambiar
-  // el estado a mano; esto solo lo hace avanzar, nunca retroceder.
-  db()->prepare(
-    "UPDATE pedidos SET estado = 'enviado'
-     WHERE usuario_id = ? AND estado = 'preparando' AND creado_en <= NOW() - INTERVAL 2 MINUTE"
-  )->execute([$uid]);
-  db()->prepare(
-    "UPDATE pedidos SET estado = 'entregado'
-     WHERE usuario_id = ? AND estado = 'enviado' AND entrega_estimada <= CURDATE()"
-  )->execute([$uid]);
-
   $consulta = db()->prepare(
-    'SELECT p.id, p.total, p.estado, p.creado_en, p.entrega_estimada,
+    'SELECT p.id, p.total, p.estado_pago, p.estado_envio, p.creado_en, p.entrega_estimada,
             d.destinatario, d.calle, d.num_exterior, d.num_interior, d.colonia,
-            d.codigo_postal, d.ciudad, d.estado AS estado_dir
+            d.codigo_postal, d.ciudad, d.estado
      FROM pedidos p JOIN direcciones d ON d.id = p.direccion_id
      WHERE p.usuario_id = ? ORDER BY p.id DESC'
   );
@@ -32,9 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     'SELECT pl.libro_id, l.titulo, pl.cantidad, pl.precio_unitario
      FROM pedido_libros pl JOIN libros l ON l.id = pl.libro_id WHERE pl.pedido_id = ?'
   );
+  $pago = db()->prepare(
+    'SELECT marca, ultimos4, motivo FROM pagos WHERE pedido_id = ? ORDER BY id DESC LIMIT 1'
+  );
   foreach ($pedidos as &$pedido) {
     $lineas->execute([$pedido['id']]);
     $pedido['libros'] = $lineas->fetchAll();
+    $pago->execute([$pedido['id']]);
+    $pedido['pago'] = $pago->fetch() ?: null;
     $pedido['total'] = (float) $pedido['total'];
   }
   responder($pedidos);
@@ -53,47 +47,33 @@ foreach ($e['libros'] ?? [] as $l) {
 }
 if (!$pedidas) fallar('El carrito está vacío.');
 
-$pdo = db();
-$pdo->beginTransaction();
-try {
-  // FOR UPDATE bloquea esas filas hasta el commit: dos compras a la vez
-  // no pueden llevarse el mismo último ejemplar
-  $libro = $pdo->prepare('SELECT titulo, precio, stock FROM libros WHERE id = ? FOR UPDATE');
-  $total = 0;
-  $precios = [];
-  foreach ($pedidas as $id => $cantidad) {
-    $libro->execute([$id]);
-    $fila = $libro->fetch();
-    if (!$fila) throw new RuntimeException('Uno de los libros ya no está en el catálogo.');
-    if ($fila['stock'] < $cantidad) {
-      throw new RuntimeException($fila['stock'] == 0
-        ? "«{$fila['titulo']}» está agotado."
-        : "De «{$fila['titulo']}» solo " . ($fila['stock'] == 1 ? 'queda 1' : "quedan {$fila['stock']}") . '.');
-    }
-    $precios[$id] = $fila['precio'];
-    $total += $fila['precio'] * $cantidad;
+// se avisa ya si no hay stock, aunque la comprobación que cuenta es la del pago
+$libro = db()->prepare('SELECT titulo, precio, stock FROM libros WHERE id = ?');
+$total = 0;
+$precios = [];
+foreach ($pedidas as $id => $cantidad) {
+  $libro->execute([$id]);
+  $fila = $libro->fetch();
+  if (!$fila) fallar('Uno de los libros ya no está en el catálogo.', 409);
+  if ($fila['stock'] < $cantidad) {
+    fallar($fila['stock'] == 0
+      ? "«{$fila['titulo']}» está agotado."
+      : "De «{$fila['titulo']}» solo " . ($fila['stock'] == 1 ? 'queda 1' : "quedan {$fila['stock']}") . '.', 409);
   }
-
-  $pdo->prepare(
-    'INSERT INTO pedidos (usuario_id, direccion_id, total, entrega_estimada)
-     VALUES (?, ?, ?, CURDATE() + INTERVAL 3 DAY)'
-  )->execute([$uid, $e['direccion_id'], round($total, 2)]);
-  $pedido_id = $pdo->lastInsertId();
-
-  $linea = $pdo->prepare(
-    'INSERT INTO pedido_libros (pedido_id, libro_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)'
-  );
-  $descontar = $pdo->prepare('UPDATE libros SET stock = stock - ? WHERE id = ?');
-  foreach ($pedidas as $id => $cantidad) {
-    $linea->execute([$pedido_id, $id, $cantidad, $precios[$id]]);
-    $descontar->execute([$cantidad, $id]);
-  }
-  $pdo->commit();
-} catch (RuntimeException $error) {
-  $pdo->rollBack();
-  fallar($error->getMessage(), 409);
+  $precios[$id] = $fila['precio'];
+  $total += $fila['precio'] * $cantidad;
 }
 
-$entrega = db()->prepare('SELECT entrega_estimada FROM pedidos WHERE id = ?');
-$entrega->execute([$pedido_id]);
-responder(['id' => (int) $pedido_id, 'total' => round($total, 2), 'entrega_estimada' => $entrega->fetchColumn()], 201);
+$pdo = db();
+$pdo->beginTransaction();
+$pdo->prepare('INSERT INTO pedidos (usuario_id, direccion_id, total) VALUES (?, ?, ?)')
+  ->execute([$uid, $e['direccion_id'], round($total, 2)]);
+$pedido_id = $pdo->lastInsertId();
+// el precio se copia: si luego cambia en el catálogo, el pedido no cambia
+$linea = $pdo->prepare(
+  'INSERT INTO pedido_libros (pedido_id, libro_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)'
+);
+foreach ($pedidas as $id => $cantidad) $linea->execute([$pedido_id, $id, $cantidad, $precios[$id]]);
+$pdo->commit();
+
+responder(['id' => (int) $pedido_id, 'total' => round($total, 2)], 201);

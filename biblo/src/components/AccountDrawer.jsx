@@ -4,7 +4,16 @@ import AuthForm from './AuthForm'
 import { formatPrice } from '../data/books'
 import { addressLine, api, formatDate } from '../api'
 
-const STATUS = { preparando: 'Preparando', enviado: 'En camino', entregado: 'Entregado' }
+// lo que ve el cliente: el estado del pago y, si ya se pagó, el del envío
+const STATUS = {
+  pendiente: 'Pago pendiente',
+  rechazado: 'Pago rechazado',
+  en_preparacion: 'En preparación',
+  enviado: 'En camino',
+  entregado: 'Entregado',
+}
+
+const status = (o) => (o.estado_pago === 'pagado' ? o.estado_envio : o.estado_pago)
 
 export default function AccountDrawer({ user, onUser, onClose }) {
   const [orders, setOrders] = useState(null)
@@ -31,6 +40,11 @@ export default function AccountDrawer({ user, onUser, onClose }) {
         <div className="drawer__body">
           <p className="form__title">Hola, {user.nombre}</p>
           <p className="drawer__aside">{user.email}</p>
+          {user.rol === 'admin' && (
+            <a className="drawer__checkout account__admin" href="#admin" onClick={onClose}>
+              Abrir el panel de administración
+            </a>
+          )}
 
           <h3 className="account__heading">Mis pedidos</h3>
           {error && (
@@ -48,7 +62,7 @@ export default function AccountDrawer({ user, onUser, onClose }) {
                     <span>
                       Pedido nº {o.id} · {formatDate(o.creado_en)}
                     </span>
-                    <span className={`order__status order__status--${o.estado}`}>{STATUS[o.estado]}</span>
+                    <span className={`order__status order__status--${status(o)}`}>{STATUS[status(o)]}</span>
                   </div>
                   <ul className="order__books">
                     {o.libros.map((l) => (
@@ -58,9 +72,20 @@ export default function AccountDrawer({ user, onUser, onClose }) {
                     ))}
                   </ul>
                   <p className="order__ship">
-                    {o.estado === 'entregado' ? 'Entregado en ' : `Llega hacia el ${formatDate(o.entrega_estimada)} a `}
-                    {addressLine({ ...o, estado: o.estado_dir })}
+                    {o.estado_pago === 'rechazado'
+                      ? `${o.pago?.motivo ?? 'El pago no se completó.'} No se hizo ningún cargo. Dirección: `
+                      : o.estado_pago === 'pendiente'
+                        ? 'Esperando el pago. Dirección: '
+                        : o.estado_envio === 'entregado'
+                          ? 'Entregado en '
+                          : `Llega hacia el ${formatDate(o.entrega_estimada)} a `}
+                    {addressLine(o)}
                   </p>
+                  {o.pago && (
+                    <p className="order__card">
+                      {o.pago.marca} ···· {o.pago.ultimos4}
+                    </p>
+                  )}
                   <p className="order__total">{formatPrice(o.total)}</p>
                 </li>
               ))}

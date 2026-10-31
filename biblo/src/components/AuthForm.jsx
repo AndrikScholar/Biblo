@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { api } from '../api'
 
 // Entrar o crear una cuenta. `onDone` recibe el usuario ya con sesión.
-export default function AuthForm({ onDone, intro }) {
+// `allowSignup`: el panel de administración solo deja entrar.
+export default function AuthForm({ onDone, intro, allowSignup = true }) {
   const [mode, setMode] = useState('entrar') // 'entrar' | 'registro'
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -56,12 +57,14 @@ export default function AuthForm({ onDone, intro }) {
       <button type="submit" className="drawer__checkout" disabled={busy}>
         {signup ? 'Crear cuenta' : 'Entrar'}
       </button>
-      <p className="form__switch">
-        {signup ? '¿Ya tienes cuenta? ' : '¿Todavía no tienes cuenta? '}
-        <button type="button" className="link-btn" onClick={() => setMode(signup ? 'entrar' : 'registro')}>
-          {signup ? 'Entra' : 'Créala aquí'}
-        </button>
-      </p>
+      {allowSignup && (
+        <p className="form__switch">
+          {signup ? '¿Ya tienes cuenta? ' : '¿Todavía no tienes cuenta? '}
+          <button type="button" className="link-btn" onClick={() => setMode(signup ? 'entrar' : 'registro')}>
+            {signup ? 'Entra' : 'Créala aquí'}
+          </button>
+        </p>
+      )}
     </form>
   )
 }

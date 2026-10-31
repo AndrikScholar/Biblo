@@ -172,6 +172,10 @@ export default function App() {
           Dicen que quien abre todos los volúmenes recibe algo a cambio. Llevas {visited.size} de {books.length}.
         </p>
         <p className="colophon__small">Biblo, la biblioteca viva. Libros y precios ficticios.</p>
+        <nav className="colophon__legal" aria-label="Información legal">
+          <a href="#privacidad">Aviso de privacidad</a>
+          <a href="#terminos">Términos y condiciones</a>
+        </nav>
       </footer>
 
       {openBook?.special === 'billDeal' && (

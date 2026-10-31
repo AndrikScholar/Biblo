@@ -568,6 +568,24 @@ main {
   font-style: italic;
 }
 
+.colophon__legal {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+  margin-top: 18px;
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+}
+
+.colophon__legal a {
+  color: var(--ink-1);
+}
+
+.colophon__legal a:hover {
+  color: var(--ink-0);
+}
+
 .colophon__small {
   margin-top: 10px;
   font-family: var(--font-data);
@@ -964,6 +982,26 @@ main {
   font-family: var(--font-data);
   font-size: 0.8125rem;
   color: rgba(251, 244, 230, 0.78);
+}
+
+.scene__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+/* el género, como una etiqueta de biblioteca teñida con el brillo del libro */
+.scene__genre {
+  padding: 3px 10px;
+  border: 1px solid color-mix(in srgb, var(--glow) 55%, transparent);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--glow) 14%, transparent);
+  color: var(--night-text);
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .scene__title {
@@ -1513,8 +1551,14 @@ main {
   font-size: 0.75rem;
 }
 
-.order__status--preparando {
+.order__status--en_preparacion,
+.order__status--pendiente {
   background: var(--cream-2);
+}
+
+.order__status--rechazado {
+  border: 1px solid #8f2a1e;
+  color: #8f2a1e;
 }
 
 .order__status--enviado {
@@ -1542,11 +1586,50 @@ main {
   color: var(--ink-1);
 }
 
+.order__card {
+  margin-top: 4px;
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  color: var(--ink-1);
+}
+
 .order__total {
   margin-top: 6px;
   font-family: var(--font-data);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+.account__admin {
+  display: block;
+  margin-top: 18px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.line__remove {
+  margin-left: auto;
+  font-size: 0.75rem;
+}
+
+.sandbox {
+  padding: 12px 14px;
+  border: 1px dashed var(--ink-2);
+  border-radius: 4px;
+  background: var(--cream-1);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.sandbox code {
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.pay__ship {
+  margin-top: 18px;
+  line-height: 1.5;
 }
 
 /* ---------- Sin conexión con XAMPP ---------- */

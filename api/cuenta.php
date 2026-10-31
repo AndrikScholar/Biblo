@@ -6,7 +6,7 @@
 require 'comun.php';
 
 function datos_usuario($id) {
-  $consulta = db()->prepare('SELECT id, nombre, email FROM usuarios WHERE id = ?');
+  $consulta = db()->prepare('SELECT id, nombre, email, rol FROM usuarios WHERE id = ?');
   $consulta->execute([$id]);
   return $consulta->fetch() ?: null;
 }

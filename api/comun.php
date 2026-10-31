@@ -49,6 +49,16 @@ function usuario_id() {
   return $_SESSION['usuario_id'] ?? fallar('Inicia sesión para continuar.', 401);
 }
 
+// El rol se lee de la base de datos en cada petición: si se le quita el
+// rol a alguien, deja de ser administrador al instante.
+function requiere_admin() {
+  $uid = usuario_id();
+  $rol = db()->prepare('SELECT rol FROM usuarios WHERE id = ?');
+  $rol->execute([$uid]);
+  if ($rol->fetchColumn() !== 'admin') fallar('Solo la administración puede hacer esto.', 403);
+  return $uid;
+}
+
 set_exception_handler(function ($e) {
   error_log($e);
   $mensaje = $e instanceof PDOException

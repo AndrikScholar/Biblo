@@ -11,6 +11,7 @@ import { stockLabel } from '../api'
 import { CloseIcon, EyeIcon, PlusIcon, CheckIcon } from './Icons'
 
 const CLOSE_MS = 520
+const GENRES = { terror: 'Terror', fantasía: 'Fantasía', aventura: 'Aventura' }
 
 // La escena de un libro abierto: su atmósfera a pantalla completa.
 // `origin` es el rectángulo del lomo; la escena crece desde ahí.
@@ -93,7 +94,11 @@ export default function BookModal({ book, origin, onClose, inCart = false, canAd
         </div>
 
         <div className="scene__text">
-          <span className="scene__sig">{book.signature}</span>
+          {/* un solo hijo de .scene__text: el escalonado de text-rise cuenta 7 */}
+          <div className="scene__meta">
+            <span className="scene__sig">{book.signature}</span>
+            {book.genre && <span className="scene__genre">{GENRES[book.genre] ?? book.genre}</span>}
+          </div>
           <h2 id="scene-title" className="scene__title">
             {book.title}
           </h2>
