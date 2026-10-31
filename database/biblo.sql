@@ -73,7 +73,7 @@ CREATE TABLE pedidos (
 
 -- El precio se copia al comprar: si luego cambia en el catálogo,
 -- el pedido conserva lo que se pagó.
-CREATE TABLE pedido_libros (
+CREATE TABLE detalle_pedido (
   pedido_id       INT UNSIGNED  NOT NULL,
   libro_id        VARCHAR(40)   NOT NULL,
   cantidad        INT UNSIGNED  NOT NULL,

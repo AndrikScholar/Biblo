@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 $e = entrada();
 
 if (($e['accion'] ?? '') === 'eliminar') {
-  $usado = db()->prepare('SELECT 1 FROM pedido_libros WHERE libro_id = ? LIMIT 1');
+  $usado = db()->prepare('SELECT 1 FROM detalle_pedido WHERE libro_id = ? LIMIT 1');
   $usado->execute([$e['id'] ?? '']);
   if ($usado->fetch()) {
     fallar('Este libro ya aparece en pedidos y borrarlo rompería su historial. Para dejar de venderlo, pon su stock en 0.', 409);

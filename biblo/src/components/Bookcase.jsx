@@ -4,6 +4,14 @@ import books, { ATMOSPHERES, SHELVES, booksByShelf, formatPrice } from '../data/
 import { playHover } from '../sound'
 import { OpenBookIcon, PlusIcon, CheckIcon } from './Icons'
 
+// filtro del estante: el género viene de la base de datos (libros.genero)
+const GENRES = [
+  ['todos', 'Todos'],
+  ['terror', 'Terror'],
+  ['fantasía', 'Fantasía'],
+  ['aventura', 'Aventura'],
+]
+
 function Spine({ book, active, visited, onActivate, onOpen, spineRef }) {
   const atmosphere = ATMOSPHERES[book.atmosphere]
   const style = {
@@ -44,6 +52,9 @@ export default function Bookcase({ activeId, onActivate, visited, inCart, canAdd
   const spineRef = useRef(null)
   const hideTimer = useRef(null)
   const [tagLeft, setTagLeft] = useState(null)
+  const [genre, setGenre] = useState('todos')
+  const genreLabel = GENRES.find(([id]) => id === genre)[1].toLowerCase()
+  const shelfBooks = (shelfId) => booksByShelf(shelfId).filter((b) => genre === 'todos' || b.genre === genre)
   const active = SHELVES.flatMap((s) => booksByShelf(s.id)).find((b) => b.id === activeId)
   const atmosphere = active ? ATMOSPHERES[active.atmosphere] : null
 
@@ -88,6 +99,24 @@ export default function Bookcase({ activeId, onActivate, visited, inCart, canAdd
 
   return (
     <section className="case-wrap" aria-label="Estanterías">
+      <div className="genres" role="group" aria-label="Filtrar por género">
+        {GENRES.map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            className={`genre${genre === id ? ' is-on' : ''}`}
+            aria-pressed={genre === id}
+            onClick={() => {
+              setGenre(id)
+              onActivate(null)
+            }}
+          >
+            {label}
+            <span className="genre__n">{id === 'todos' ? books.length : books.filter((b) => b.genre === id).length}</span>
+          </button>
+        ))}
+      </div>
+
       <div
         className="case"
         ref={caseRef}
@@ -139,7 +168,10 @@ export default function Bookcase({ activeId, onActivate, visited, inCart, canAdd
               <span className="bay__sub">{shelf.subtitle}</span>
             </div>
             <div className="bay__books">
-              {booksByShelf(shelf.id).map((book) => (
+              {shelfBooks(shelf.id).length === 0 && (
+                <p className="bay__empty">Ningún libro de {genreLabel} en esta estantería.</p>
+              )}
+              {shelfBooks(shelf.id).map((book) => (
                 <Spine
                   key={book.id}
                   book={book}

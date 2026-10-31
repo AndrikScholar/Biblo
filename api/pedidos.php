@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $pedidos = $consulta->fetchAll();
 
   $lineas = db()->prepare(
-    'SELECT pl.libro_id, l.titulo, pl.cantidad, pl.precio_unitario
-     FROM pedido_libros pl JOIN libros l ON l.id = pl.libro_id WHERE pl.pedido_id = ?'
+    'SELECT dp.libro_id, l.titulo, dp.cantidad, dp.precio_unitario
+     FROM detalle_pedido dp JOIN libros l ON l.id = dp.libro_id WHERE dp.pedido_id = ?'
   );
   $pago = db()->prepare(
     'SELECT marca, ultimos4, motivo FROM pagos WHERE pedido_id = ? ORDER BY id DESC LIMIT 1'
@@ -71,7 +71,7 @@ $pdo->prepare('INSERT INTO pedidos (usuario_id, direccion_id, total) VALUES (?, 
 $pedido_id = $pdo->lastInsertId();
 // el precio se copia: si luego cambia en el catálogo, el pedido no cambia
 $linea = $pdo->prepare(
-  'INSERT INTO pedido_libros (pedido_id, libro_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)'
+  'INSERT INTO detalle_pedido (pedido_id, libro_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)'
 );
 foreach ($pedidas as $id => $cantidad) $linea->execute([$pedido_id, $id, $cantidad, $precios[$id]]);
 $pdo->commit();

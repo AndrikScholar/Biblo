@@ -49,9 +49,9 @@ elseif (str_ends_with($numero, '0002')) $motivo = 'Fondos insuficientes.';
 // FOR UPDATE bloquea esas filas hasta el commit: dos pagos a la vez no
 // pueden llevarse el mismo último ejemplar
 $lineas = $pdo->prepare(
-  'SELECT pl.libro_id, pl.cantidad, l.titulo, l.stock
-   FROM pedido_libros pl JOIN libros l ON l.id = pl.libro_id
-   WHERE pl.pedido_id = ? FOR UPDATE'
+  'SELECT dp.libro_id, dp.cantidad, l.titulo, l.stock
+   FROM detalle_pedido dp JOIN libros l ON l.id = dp.libro_id
+   WHERE dp.pedido_id = ? FOR UPDATE'
 );
 $lineas->execute([$e['pedido_id']]);
 $lineas = $lineas->fetchAll();

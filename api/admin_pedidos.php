@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   )->fetchAll();
 
   $lineas = db()->prepare(
-    'SELECT pl.libro_id, l.titulo, pl.cantidad, pl.precio_unitario
-     FROM pedido_libros pl JOIN libros l ON l.id = pl.libro_id WHERE pl.pedido_id = ?'
+    'SELECT dp.libro_id, l.titulo, dp.cantidad, dp.precio_unitario
+     FROM detalle_pedido dp JOIN libros l ON l.id = dp.libro_id WHERE dp.pedido_id = ?'
   );
   $pago = db()->prepare(
     'SELECT marca, ultimos4, motivo FROM pagos WHERE pedido_id = ? ORDER BY id DESC LIMIT 1'

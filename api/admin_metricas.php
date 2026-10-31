@@ -9,20 +9,20 @@ $ventas = db()->query(
 )->fetch();
 
 $unidades = db()->query(
-  "SELECT COALESCE(SUM(pl.cantidad), 0)
-   FROM pedido_libros pl JOIN pedidos p ON p.id = pl.pedido_id WHERE p.estado_pago = 'pagado'"
+  "SELECT COALESCE(SUM(dp.cantidad), 0)
+   FROM detalle_pedido dp JOIN pedidos p ON p.id = dp.pedido_id WHERE p.estado_pago = 'pagado'"
 )->fetchColumn();
 
 $por_estado = db()->query('SELECT estado_pago, COUNT(*) AS n FROM pedidos GROUP BY estado_pago')
   ->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $mas_vendidos = db()->query(
-  "SELECT l.titulo, SUM(pl.cantidad) AS unidades
-   FROM pedido_libros pl
-   JOIN pedidos p ON p.id = pl.pedido_id
-   JOIN libros l ON l.id = pl.libro_id
+  "SELECT l.titulo, SUM(dp.cantidad) AS unidades
+   FROM detalle_pedido dp
+   JOIN pedidos p ON p.id = dp.pedido_id
+   JOIN libros l ON l.id = dp.libro_id
    WHERE p.estado_pago = 'pagado'
-   GROUP BY pl.libro_id, l.titulo ORDER BY unidades DESC, l.titulo LIMIT 5"
+   GROUP BY dp.libro_id, l.titulo ORDER BY unidades DESC, l.titulo LIMIT 5"
 )->fetchAll();
 
 responder([

@@ -239,6 +239,62 @@ main {
   margin: 0 auto;
 }
 
+/* filtro por género, sobre la estantería */
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.genre {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px 7px 14px;
+  border: 1px solid rgba(239, 227, 203, 0.22);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--night-text);
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.genre:hover {
+  background: rgba(239, 227, 203, 0.08);
+}
+
+.genre.is-on {
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--brass-hi), var(--brass-lo));
+  color: var(--brass-ink);
+  font-weight: 700;
+}
+
+.genre__n {
+  min-width: 20px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(239, 227, 203, 0.12);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.genre.is-on .genre__n {
+  background: var(--brass-ink);
+  color: var(--brass-hi);
+}
+
+.bay__empty {
+  align-self: center;
+  max-width: 18em;
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  color: rgba(251, 244, 230, 0.6);
+}
+
 .case {
   position: relative;
   display: grid;
