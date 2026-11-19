@@ -342,7 +342,7 @@ function BookForm({ book, onCancel, onSaved }) {
             </select>
           </label>
           <Field label="Signatura" name="signatura" defaultValue={v('signatura')} required maxLength={20} placeholder="X-666 · CIP" />
-          <Field label="Precio ($)" name="precio" type="number" min="0" step="0.01" defaultValue={v('precio')} required />
+          <Field label="Precio (MXN)" name="precio" type="number" min="0" step="0.01" defaultValue={v('precio')} required />
           <Field label="Stock (ejemplares)" name="stock" type="number" min="0" step="1" defaultValue={v('stock')} required />
           <Field
             label="Portada (opcional)"

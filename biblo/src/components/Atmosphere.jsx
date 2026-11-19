@@ -5,6 +5,8 @@ import { createMancha } from './manchaScene'
 import { windAt, startWind } from './manchaWind'
 import { createHogwarts } from './hogwartsScene'
 import { createCidField } from './cidScene'
+import { createComalaPaper } from './comalaPaper'
+import { createMacondoRain } from './macondoRain'
 
 // Motor de atmósferas.
 // Cada libro tiene un preset. Las partículas viven en tres profundidades
@@ -30,6 +32,10 @@ const CONFIGS = {
   hogwarts: { count: 35, size: [0.5, 1.6], speed: [0.03, 0.08], motion: 'drift', twinkle: true, glow: true, scenery: createHogwarts, maxDpr: 1.5 },
   // El Cid: pétalos de amapola que vuelan con las rachas sobre el campo de flores
   cid: { count: 40, size: [1, 3.2], speed: [0.4, 1.2], motion: 'wind', petal: true, scenery: createCidField, gusts: windAt, maxDpr: 1.5 },
+  // Pedro Páramo: papel crema con grabados que aparecen y se borran; motas de polvo de tinta
+  comala: { count: 22, size: [0.4, 1.1], speed: [0.02, 0.05], motion: 'drift', scenery: createComalaPaper, maxDpr: 1.5 },
+  // Cien años de soledad: la lluvia de cuatro años sobre la pared de la portada
+  macondo: { count: 170, size: [0.8, 1.4], speed: [10, 15], motion: 'down', streak: true, splash: true, scenery: createMacondoRain, maxDpr: 1.5 },
   lluvia: { count: 190, size: [0.8, 1.4], speed: [11, 16], motion: 'down', streak: true, splash: true, glowSpot: true },
 }
 

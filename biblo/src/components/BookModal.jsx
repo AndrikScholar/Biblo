@@ -6,6 +6,8 @@ import CipherWheel from './CipherWheel'
 import Asteroid from './Asteroid'
 import PaperBoat from './PaperBoat'
 import CheshireGrin from './CheshireGrin'
+import ComalaDog from './ComalaDog'
+import MacondoButterflies from './MacondoButterflies'
 import { ATMOSPHERES, formatPrice } from '../data/books'
 import { stockLabel } from '../api'
 import { CloseIcon, EyeIcon, PlusIcon, CheckIcon } from './Icons'
@@ -71,6 +73,8 @@ export default function BookModal({ book, origin, onClose, inCart = false, canAd
       {book.edges === 'asteroid' && <Asteroid />}
       {book.edges === 'paperBoat' && <PaperBoat />}
       {book.edges === 'cheshire' && <CheshireGrin />}
+      {book.edges === 'comalaDog' && <ComalaDog />}
+      {book.edges === 'butterflies' && <MacondoButterflies />}
 
       <div className="scene__controls">
         <button

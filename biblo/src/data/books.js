@@ -79,6 +79,22 @@ export const ATMOSPHERES = {
     particle: '#fff1c2',
     glow: '#ffd65c',
   },
+  // Pedro Páramo: el papel crema de su portada, donde se graban a plumilla
+  // dibujos de Comala (src/components/comalaPaper.js)
+  comala: {
+    label: 'Papel grabado',
+    bg: '#efe7d3',
+    particle: '#1e1a15',
+    glow: '#7b3b1e',
+  },
+  // Cien años de soledad: la pared de su portada, empapada por los cuatro
+  // años de lluvia (src/components/macondoRain.js)
+  macondo: {
+    label: 'Lluvia sobre la pared',
+    bg: 'linear-gradient(180deg, #6a3810 0%, #4a2a0e 64%, #3a0f08 65%, #0d3a55 67%, #071a26 100%)',
+    particle: '#cfe3ea',
+    glow: '#ffd23a',
+  },
   lluvia: {
     label: 'Lluvia',
     bg: 'radial-gradient(80% 60% at 65% 30%, #3a2c17 0%, #1a2028 45%, #0a0d10 100%)',
@@ -157,6 +173,24 @@ const books = [
     spine: { height: 0.9, width: 92 },
     ambientLabel: 'EN EL CASTILLO SIGUEN ENCENDIDAS LAS VENTANAS, Y DE VEZ EN CUANDO UNA LECHUZA CRUZA EL LAGO CON UNA CARTA',
   },
+  {
+    id: 'pedro-paramo',
+    atmosphere: 'comala',
+    special: 'pedroDogs',
+    edges: 'comalaDog',
+    spine: { height: 0.93, width: 78 },
+    // la portada es crema: el título del lomo va en blanco sobre el velo oscuro
+    spineInk: '#fbf4e6',
+    ambientLabel: 'UNA PLUMA INVISIBLE GRABA EN EL PAPEL UN PUEBLO DONDE YA NADIE VIVE, Y LO BORRA OTRA VEZ',
+  },
+  {
+    id: 'cien-anos-de-soledad',
+    atmosphere: 'macondo',
+    special: 'macondoDoor',
+    edges: 'butterflies',
+    spine: { height: 0.95, width: 92 },
+    ambientLabel: 'LLUEVE SOBRE LA PARED DESDE HACE CUATRO AÑOS, ONCE MESES Y DOS DÍAS, Y LAS MARIPOSAS AMARILLAS SIGUEN VOLVIENDO',
+  },
 ]
 
 
@@ -199,9 +233,10 @@ export function booksByShelf(shelfId) {
   return books.filter((b) => b.shelf === shelfId)
 }
 
-// Precios ficticios: forman parte de la ficción de la tienda.
+// Precios en pesos mexicanos: $1,234.50 MXN
+const MXN = new Intl.NumberFormat('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 export function formatPrice(value) {
-  return `$${value.toFixed(2)}`
+  return `$${MXN.format(value)} MXN`
 }
 
 export default books

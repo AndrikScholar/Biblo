@@ -1,0 +1,91 @@
+/* ---- Pedro Páramo: tinta sobre papel crema, como su portada ---- */
+
+.pedro,
+.pedro .rising__veil {
+  background: #efe7d3;
+}
+
+/* el título se reparte como en la portada: arriba y abajo de la lámina */
+.pedro__title {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: #1e1a15;
+  font-family: var(--font-display);
+  text-align: center;
+}
+
+.pedro__name,
+.pedro__author {
+  position: absolute;
+  left: 50%;
+  white-space: nowrap;
+  opacity: 0;
+  filter: blur(5px);
+  transform: translate(-50%, 0) scale(1.06);
+  transition: opacity 1s var(--ease-out), filter 1s var(--ease-out), transform 1.2s var(--ease-out);
+}
+
+/* "PEDRO" y "PÁRAMO" en versalitas abiertas, como la letra de la portada */
+.pedro__name {
+  font-size: clamp(2.4rem, 7.4vw, 5.6rem);
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.pedro__name--top {
+  top: 6.5vh;
+}
+
+.pedro__name--bottom {
+  bottom: 10.5vh;
+  transition-delay: 0.18s;
+}
+
+.pedro__author {
+  bottom: 5vh;
+  font-size: clamp(0.95rem, 1.9vw, 1.35rem);
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  text-transform: uppercase;
+  transition-delay: 0.36s;
+}
+
+.pedro__title.is-on .pedro__name,
+.pedro__title.is-on .pedro__author {
+  opacity: 1;
+  filter: blur(0);
+  transform: translate(-50%, 0) scale(1);
+}
+
+/* en pantallas altas la lámina queda en medio: el título se le acerca */
+@media (max-aspect-ratio: 4 / 5) {
+  .pedro__name--top {
+    top: 17vh;
+  }
+
+  .pedro__name--bottom {
+    bottom: 21vh;
+  }
+
+  .pedro__author {
+    bottom: 16vh;
+  }
+}
+
+.pedro .rising__skip {
+  border-color: rgba(30, 26, 21, 0.35);
+  background: rgba(239, 231, 211, 0.7);
+  color: #1e1a15;
+}
+
+.pedro .rising__skip:hover {
+  background: #1e1a15;
+  color: #efe7d3;
+}
+
+.pedro .rising__skip:focus-visible {
+  outline-color: #1e1a15;
+}

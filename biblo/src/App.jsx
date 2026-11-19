@@ -19,6 +19,9 @@ import QuijoteRide from './components/QuijoteRide'
 import { prepareQuijoteMusic } from './components/quijoteMusic'
 import HogwartsLetter from './components/HogwartsLetter'
 import CidRest from './components/CidRest'
+import PedroDogs from './components/PedroDogs'
+import MacondoDoor from './components/MacondoDoor'
+import { prepareMacondoMusic } from './components/macondoMusic'
 import { prepareCidMusic } from './components/cidMusic'
 import AchievementToast from './components/AchievementToast'
 import books, { loadCatalog } from './data/books'
@@ -127,6 +130,7 @@ export default function App() {
       prepareAliceMusic()
       prepareQuijoteMusic()
       prepareCidMusic()
+      prepareMacondoMusic()
       for (const url of ['/scenes/cthulhu.glb', '/scenes/globo.glb', '/scenes/sonrisa.glb', '/cajita-musical.mp3']) {
         fetch(url).catch(() => {})
       }
@@ -230,6 +234,8 @@ export default function App() {
           synopsisProps={synopsisProps}
         />
       )}
+      {openBook?.special === 'pedroDogs' && <PedroDogs onExit={closeBook} synopsisProps={synopsisProps} />}
+      {openBook?.special === 'macondoDoor' && <MacondoDoor onExit={closeBook} synopsisProps={synopsisProps} />}
       {openBook && !openBook.special && (
         <BookModal
           book={openBook}

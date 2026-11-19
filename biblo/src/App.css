@@ -745,7 +745,8 @@ main {
 
 /* entre la atmósfera y el contenido: enmarca sin tapar el texto */
 .scene__tentacles,
-.scene__boat {
+.scene__boat,
+.scene__dog {
   position: fixed;
   inset: 0;
   z-index: 1;
@@ -765,8 +766,75 @@ main {
 .scene:has([data-kind='mancha']) .scene__text,
 .scene:has([data-kind='mancha']) .scene__ambient,
 .scene:has([data-kind='cid']) .scene__text,
-.scene:has([data-kind='cid']) .scene__ambient {
+.scene:has([data-kind='cid']) .scene__ambient,
+.scene:has([data-kind='macondo']) .scene__text,
+.scene:has([data-kind='macondo']) .scene__ambient {
   text-shadow: 0 0 6px rgba(16, 11, 10, 0.9), 0 1px 3px rgba(16, 11, 10, 0.85), 0 0 22px rgba(16, 11, 10, 0.55);
+}
+
+/* Cien años de soledad: las mariposas van por encima de la ficha (nunca se
+   posan sobre el texto ni lo cruzan: lo comprueban antes de cada vuelo) */
+.scene__butterflies {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Pedro Páramo: la ficha es papel crema, así que el texto pasa a tinta */
+.scene:has([data-kind='comala']) {
+  color: #1e1a15;
+}
+
+.scene:has([data-kind='comala']) .scene__sig,
+.scene:has([data-kind='comala']) .scene__byline,
+.scene:has([data-kind='comala']) .scene__quote,
+.scene:has([data-kind='comala']) .scene__incart,
+.scene:has([data-kind='comala']) .scene__stock {
+  color: rgba(30, 26, 21, 0.78);
+}
+
+.scene:has([data-kind='comala']) .scene__desc {
+  color: rgba(30, 26, 21, 0.92);
+}
+
+.scene:has([data-kind='comala']) .scene__ambient {
+  text-shadow: none;
+}
+
+.scene:has([data-kind='comala']) .scene__quote {
+  border-top-color: rgba(30, 26, 21, 0.25);
+}
+
+.scene:has([data-kind='comala']) .scene__genre {
+  color: #1e1a15;
+}
+
+.scene:has([data-kind='comala']) .scene__add {
+  background: #1e1a15;
+  color: #efe7d3;
+}
+
+.scene:has([data-kind='comala']) .scene__btn {
+  border-color: rgba(30, 26, 21, 0.35);
+  background: rgba(239, 231, 211, 0.6);
+  color: #1e1a15;
+}
+
+.scene:has([data-kind='comala']) .scene__btn:hover,
+.scene:has([data-kind='comala']) .scene__btn[aria-pressed='true'] {
+  background: #1e1a15;
+  color: #efe7d3;
+}
+
+.scene:has([data-kind='comala']) :focus-visible {
+  outline-color: #1e1a15;
+}
+
+.scene:has([data-kind='comala']) .scene__cover {
+  box-shadow: 14px 24px 40px -18px rgba(60, 40, 20, 0.55);
 }
 
 /* Gato de Cheshire: su cara pintada aparece en un hueco libre de la ficha.
